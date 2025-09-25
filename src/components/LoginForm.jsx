@@ -11,11 +11,13 @@ const LoginForm = () => {
   };
 
   const containerStyle = {
+    marginLeft:'auto',
+    marginRight:'20%',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     padding: '20px',
-    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
   };
 
   const titleStyle = {
@@ -112,6 +114,8 @@ const LoginForm = () => {
     cursor: 'pointer',
     
   };
+
+
 
   return (
     <div style={containerStyle}>

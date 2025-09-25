@@ -4,9 +4,15 @@ App {
   gap: 10px;
   width: 300px;
   margin: 20px auto;
+  background-image: linear-gradient(to right, #F8EDE5 30.4%, #82ABF8 88.48%),
 }
  
 input {
   padding: 10px;
   font-size: 16px;
+}
+
+html, 
+body {
+    height: 100%;
 }
