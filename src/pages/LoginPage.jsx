@@ -1,10 +1,11 @@
 import LoginForm from '../components/LoginForm'
 
 function LoginPage() {
-    return 
+    return (
     <>
     <p> aa </p>
     <LoginForm />
     </>
+    )
 }
 export default LoginPage
