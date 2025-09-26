@@ -11,8 +11,7 @@ const LoginForm = () => {
   };
 
   const containerStyle = {
-    marginLeft:'auto',
-    marginRight:'20%',
+    margin:'auto',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
