@@ -108,7 +108,7 @@ const LoginForm = () => {
   };
 
   const forgotPasswordLinkStyle = {
-    color: '#7A9BE9',
+    color: '#3A5FCF',
     fontSize: '18px',
     textDecoration: 'none',
     cursor: 'pointer',
