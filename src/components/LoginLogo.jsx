@@ -1,5 +1,5 @@
-import logoOk from '../assets/logo_ok.png';
 import loginAnim from '../assets/landing_anim.gif';
+import logoOk from '../assets/logo_ok.png';
 function LoginLogo() {
 const logoContainer = {
     position:'relative',
@@ -8,6 +8,10 @@ const logoContainer = {
     alignItems: 'center',
     justifyContent: 'center',
     padding: '20px',
+    width: '100%',
+    maxWidth: '450px',
+    height: 'auto',
+    maxHeight: '250px',
 }
 
 

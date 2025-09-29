@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Eye, EyeOff, ArrowRight } from 'lucide-react';
+import { ArrowRight, Eye, EyeOff } from 'lucide-react';
+import { useState } from 'react';
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
@@ -16,15 +16,15 @@ const LoginForm = () => {
     alignItems: 'center',
     justifyContent: 'center',
     padding: '20px',
-    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+    fontFamily: '"Montserrat", sans-serif',
   };
 
   const titleStyle = {
     color: '#3A5FCF',
     fontSize: '64px',
     fontWeight: '400',
-    textAlign: 'center',    
-    marginBottom: '40px',
+    textAlign: 'center',
+    marginBottom: '5px',
     letterSpacing: '1px'
   };
 
@@ -45,13 +45,16 @@ const LoginForm = () => {
     border: 'none',
     borderRadius: '22px',
     fontSize: '16px',
-    color:'#7A9BE9',
+    color:'#82ABF8',
     marginBottom: '16px',
     outline: 'none',
     boxSizing: 'border-box',
-    boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.06)',
-    WebkitBoxShadow: '0 0 0 1000px #9FBFFA inset',
-    WebkitTextFillColor: '#1e40af',
+    boxShadow: `
+    inset 4px 4px 12px rgba(0, 0, 0, 0.25),
+    inset -4px -4px 12px rgba(255, 255, 255, 0.6)
+    `,
+    //WebkitBoxShadow: '0 0 0 1000px #9FBFFA inset',
+    WebkitTextFillColor: '#3A5FCF',
     transition: 'background-color 5000s ease-in-out 0s'
   };
 
@@ -69,12 +72,12 @@ const LoginForm = () => {
   const eyeButtonStyle = {
     position: 'absolute',
     right: '18px',
-    top: '50%',
+    top: '33%',
     transform: 'translateY(-50%)',
     background: 'none',
     border: 'none',
     cursor: 'pointer',
-    color: '#1e40af',
+    color: '#3A5FCF',
     padding: '4px',
     borderRadius: '50%',
     display: 'flex',
@@ -84,15 +87,16 @@ const LoginForm = () => {
 
   const submitButtonContainerStyle = {
     display: 'flex',
-    justifyContent: 'flex-end',
-    marginTop: '8px'
+    justifyContent: 'center',
+    marginTop: '5px',
+    
   };
 
   const submitButtonStyle = {
-    backgroundColor: '#60a5fa',
+    backgroundColor: '#82ABF8',
     border: 'none',
     borderRadius: '18px',
-    padding: '14px 16px',
+    padding: '14px 25px',
     cursor: 'pointer',
     boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
     transition: 'all 0.2s ease',
@@ -103,15 +107,22 @@ const LoginForm = () => {
 
   const forgotPasswordStyle = {
     textAlign: 'center',
-    marginTop: '32px'
+    marginTop: '10px',
+    marginLeft: '5px'
   };
 
   const forgotPasswordLinkStyle = {
     color: '#3A5FCF',
-    fontSize: '18px',
+    fontSize: '14px',
     textDecoration: 'none',
     cursor: 'pointer',
-    
+  };
+
+  const signUpLinkStyle = {
+    color: '#3A5FCF',
+    fontSize: '16px',
+    textDecoration: 'none',
+    cursor: 'pointer',
   };
 
 
@@ -154,9 +165,13 @@ const LoginForm = () => {
               >
                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
+              <div style={forgotPasswordStyle}>
+                <a href="#" style={forgotPasswordLinkStyle}>
+                  Forgot Password?
+                </a>
             </div>
-            
-            <div style={submitButtonContainerStyle}>
+            </div>
+              <div style={submitButtonContainerStyle}>
               <button
                 onClick={handleSubmit}
                 style={submitButtonStyle}
@@ -174,12 +189,11 @@ const LoginForm = () => {
             </div>
           </div>
         </div>
-        
         <div style={forgotPasswordStyle}>
-          <a href="#" style={forgotPasswordLinkStyle}>
-            Forgot Password?
-          </a>
-        </div>
+                <a href="#" style={signUpLinkStyle}>
+                  Don't have an account? Sign Up
+                </a>
+            </div>
       </div>
     </div>
   );
