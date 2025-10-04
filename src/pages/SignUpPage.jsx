@@ -1,8 +1,8 @@
-import LoginForm from '../components/LoginForm'
+import SignUpForm from '../components/SignUpForm'
 import LoginLogo from '../components/LoginLogo'
 
 
-function LoginPage() {
+function SignUpPage() {
 
     const body = {
          overflow: 'hidden', //prevent page break from extreme zooms
@@ -23,8 +23,8 @@ function LoginPage() {
     return (
     <div style={body}>
     <LoginLogo/>
-    <LoginForm />
+    <SignUpForm />
     </div>
     )
 }
-export default LoginPage
+export default SignUpPage

@@ -1,15 +1,17 @@
 import { ArrowRight, Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
-    import { Link } from 'react-router-dom';
+  import { Link } from 'react-router-dom';
 
-const LoginForm = () => {
+const SignUpForm = () => {
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const handleSubmit = () => {
-    console.log('Login attempt:', { email, password });
-  };
+
 
   const containerStyle = {
     margin:'auto',
@@ -73,7 +75,7 @@ const LoginForm = () => {
   const eyeButtonStyle = {
     position: 'absolute',
     right: '18px',
-    top: '33%',
+    top: '50%',
     transform: 'translateY(-50%)',
     background: 'none',
     border: 'none',
@@ -112,12 +114,7 @@ const LoginForm = () => {
     marginLeft: '5px'
   };
 
-  const forgotPasswordLinkStyle = {
-    color: '#3A5FCF',
-    fontSize: '14px',
-    textDecoration: 'none',
-    cursor: 'pointer',
-  };
+
 
   const signUpLinkStyle = {
     color: '#3A5FCF',
@@ -126,16 +123,35 @@ const LoginForm = () => {
     cursor: 'pointer',
   };
 
-function login() {
-
+function SignUp() {
+ console.log('a')
 }
 
   return (
     <div style={containerStyle}>
       <div>
-        <h1 style={titleStyle}>Log In</h1>
-        <form action={login} style={formContainerStyle}>
+        <h1 style={titleStyle}>Sign Up</h1>
+        <form action={SignUp} style={formContainerStyle} >
           <div>
+
+             <input
+              type="text"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              placeholder="First Name"
+              style={{
+                ...inputStyle,
+              }}
+            />
+             <input
+              type="text"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              placeholder="Last Name"
+              style={{
+                ...inputStyle,
+              }}
+            />
             <input
               type="email"
               value={email}
@@ -145,22 +161,22 @@ function login() {
                 ...inputStyle,
               }}
             />
-            
             <div style={passwordContainerStyle}>
-              <input
+              <input 
                 type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
-                autoComplete='new-password'
+                autoComplete="new-password"
                 style={{
                   ...passwordInputStyle,
                 }}
               />
               <button
-              type= 'button'
+              type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 style={eyeButtonStyle}
+                
                 onMouseEnter={(e) => {
                   e.target.style.backgroundColor = 'rgba(30, 64, 175, 0.1)';
                 }}
@@ -170,15 +186,38 @@ function login() {
               >
                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
-              <div style={forgotPasswordStyle}>
-                <a href="#" style={forgotPasswordLinkStyle}>
-                  Forgot Password?
-                </a>
             </div>
+            
+            <div style={passwordContainerStyle}>
+              <input
+              
+                type={showConfirmPassword ? 'text' : 'password'}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="Confirm Password"
+                style={{
+                  ...passwordInputStyle,
+                }}
+              />
+              <button
+              type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                style={eyeButtonStyle}
+                onMouseEnter={(e) => {
+                  e.target.style.backgroundColor = 'rgba(30, 64, 175, 0.1)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.backgroundColor = 'transparent';
+                }}
+              >
+                {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+             
             </div>
+            
+             
               <div style={submitButtonContainerStyle}>
               <button
-                onClick={handleSubmit}
                 style={submitButtonStyle}
                 onMouseEnter={(e) => {
                   e.target.style.backgroundColor = '#3b82f6';
@@ -193,15 +232,16 @@ function login() {
               </button>
             </div>
           </div>
-          </form>
-        <div style={forgotPasswordStyle}>
-                <Link to="/signup" style={signUpLinkStyle}>
+           </form>
+        <div style={forgotPasswordStyle}>  
+                 <Link to="/login" style={signUpLinkStyle}>
                   Don't have an account? Sign Up
                 </Link>
-            </div>
-      </div>
-      </div>
+               
+     </div>
+    </div>
+    </div>
   );
 };
 
-export default LoginForm;
+export default SignUpForm;
