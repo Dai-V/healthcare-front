@@ -1,20 +1,20 @@
 import { ArrowRight, Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
-  import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 
 const SignUpForm = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
 
 
   const containerStyle = {
-    margin:'auto',
+    margin: 'auto',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -48,7 +48,7 @@ const SignUpForm = () => {
     border: 'none',
     borderRadius: '22px',
     fontSize: '16px',
-    color:'#82ABF8',
+    color: '#82ABF8',
     marginBottom: '16px',
     outline: 'none',
     boxSizing: 'border-box',
@@ -92,7 +92,7 @@ const SignUpForm = () => {
     display: 'flex',
     justifyContent: 'center',
     marginTop: '5px',
-    
+
   };
 
   const submitButtonStyle = {
@@ -123,9 +123,26 @@ const SignUpForm = () => {
     cursor: 'pointer',
   };
 
-function SignUp() {
- console.log('a')
-}
+  async function SignUp() {
+    const response = await fetch(import.meta.env.VITE_BACKEND + 'api/auth/signup', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json', // Specify content type as JSON
+      },
+      body: JSON.stringify(formData), // Convert form data to JSON string
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+    const data = await response.json()
+    if (data['id'] && data['role']) {
+      navigate('/login')
+    }
+    else {
+      throw new Error('error parsing data')
+    }
+  }
 
   return (
     <div style={containerStyle}>
@@ -134,7 +151,7 @@ function SignUp() {
         <form action={SignUp} style={formContainerStyle} >
           <div>
 
-             <input
+            <input
               type="text"
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
@@ -143,7 +160,7 @@ function SignUp() {
                 ...inputStyle,
               }}
             />
-             <input
+            <input
               type="text"
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
@@ -162,7 +179,7 @@ function SignUp() {
               }}
             />
             <div style={passwordContainerStyle}>
-              <input 
+              <input
                 type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -173,10 +190,10 @@ function SignUp() {
                 }}
               />
               <button
-              type="button"
+                type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 style={eyeButtonStyle}
-                
+
                 onMouseEnter={(e) => {
                   e.target.style.backgroundColor = 'rgba(30, 64, 175, 0.1)';
                 }}
@@ -187,10 +204,10 @@ function SignUp() {
                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
             </div>
-            
+
             <div style={passwordContainerStyle}>
               <input
-              
+
                 type={showConfirmPassword ? 'text' : 'password'}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
@@ -200,7 +217,7 @@ function SignUp() {
                 }}
               />
               <button
-              type="button"
+                type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 style={eyeButtonStyle}
                 onMouseEnter={(e) => {
@@ -212,11 +229,11 @@ function SignUp() {
               >
                 {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
-             
+
             </div>
-            
-             
-              <div style={submitButtonContainerStyle}>
+
+
+            <div style={submitButtonContainerStyle}>
               <button
                 style={submitButtonStyle}
                 onMouseEnter={(e) => {
@@ -232,14 +249,14 @@ function SignUp() {
               </button>
             </div>
           </div>
-           </form>
-        <div style={forgotPasswordStyle}>  
-                 <Link to="/login" style={signUpLinkStyle}>
-                  Don't have an account? Sign Up
-                </Link>
-               
-     </div>
-    </div>
+        </form>
+        <div style={forgotPasswordStyle}>
+          <Link to="/login" style={signUpLinkStyle}>
+            Don't have an account? Sign Up
+          </Link>
+
+        </div>
+      </div>
     </div>
   );
 };

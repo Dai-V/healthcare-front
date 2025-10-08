@@ -1,8 +1,14 @@
-import SignUpForm from '../components/SignUpForm'
-import LoginLogo from '../components/LoginLogo'
+import Calendar from '../components/Calendar'
+import HelloLogo from '../components/HelloLogo';
+import { useState, useEffect } from 'react';
+import secureLocalStorage from 'react-secure-storage';
 
+function DashboardPatientPage() {
+    const [id, setId] = useState(secureLocalStorage.getItem("id"));
+    const [role, setRole] = useState(secureLocalStorage.getItem("role"));
+    useEffect(() => {
+    }, []);
 
-function SignUpPage() {
 
     const body = {
         overflow: 'hidden', //prevent page break from extreme zooms
@@ -22,9 +28,9 @@ function SignUpPage() {
 
     return (
         <div style={body}>
-            <LoginLogo />
-            <SignUpForm />
+            <Calendar />
+            <HelloLogo />
         </div>
     )
 }
-export default SignUpPage
+export default DashboardPatientPage

@@ -1,18 +1,22 @@
 import { ArrowRight, Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
-    import { Link } from 'react-router-dom';
-
+import { Link, Navigate, useNavigate } from 'react-router-dom';
+import secureLocalStorage from "react-secure-storage";
 const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
-  const handleSubmit = () => {
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
     console.log('Login attempt:', { email, password });
+    login(e.formData)
   };
 
   const containerStyle = {
-    margin:'auto',
+    margin: 'auto',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -46,7 +50,7 @@ const LoginForm = () => {
     border: 'none',
     borderRadius: '22px',
     fontSize: '16px',
-    color:'#82ABF8',
+    color: '#82ABF8',
     marginBottom: '16px',
     outline: 'none',
     boxSizing: 'border-box',
@@ -90,7 +94,7 @@ const LoginForm = () => {
     display: 'flex',
     justifyContent: 'center',
     marginTop: '5px',
-    
+
   };
 
   const submitButtonStyle = {
@@ -126,9 +130,32 @@ const LoginForm = () => {
     cursor: 'pointer',
   };
 
-function login() {
+  async function login(formData) {
+    //  const response = await fetch(import.meta.env.VITE_BACKEND+'api/auth/login', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json', // Specify content type as JSON
+    //     },
+    //     body: JSON.stringify(formData), // Convert form data to JSON string
+    //   });
 
-}
+    //   if (!response.ok) {
+    //     throw new Error(`HTTP error! status: ${response.status}`)
+    //   }
+    // const data = await response.json()
+    let data = {
+      'id': 1,
+      'role': 'patient'
+    }
+    if (data['id'] && data['role']) {
+      secureLocalStorage.setItem("id", data.id)
+      secureLocalStorage.setItem("role", data.role)
+      navigate('/dashboard')
+    }
+    else {
+      throw new Error('error parsing data')
+    }
+  }
 
   return (
     <div style={containerStyle}>
@@ -145,7 +172,7 @@ function login() {
                 ...inputStyle,
               }}
             />
-            
+
             <div style={passwordContainerStyle}>
               <input
                 type={showPassword ? 'text' : 'password'}
@@ -158,7 +185,7 @@ function login() {
                 }}
               />
               <button
-              type= 'button'
+                type='button'
                 onClick={() => setShowPassword(!showPassword)}
                 style={eyeButtonStyle}
                 onMouseEnter={(e) => {
@@ -174,9 +201,9 @@ function login() {
                 <a href="#" style={forgotPasswordLinkStyle}>
                   Forgot Password?
                 </a>
+              </div>
             </div>
-            </div>
-              <div style={submitButtonContainerStyle}>
+            <div style={submitButtonContainerStyle}>
               <button
                 onClick={handleSubmit}
                 style={submitButtonStyle}
@@ -193,14 +220,14 @@ function login() {
               </button>
             </div>
           </div>
-          </form>
+        </form>
         <div style={forgotPasswordStyle}>
-                <Link to="/signup" style={signUpLinkStyle}>
-                  Don't have an account? Sign Up
-                </Link>
-            </div>
+          <Link to="/signup" style={signUpLinkStyle}>
+            Don't have an account? Sign Up
+          </Link>
+        </div>
       </div>
-      </div>
+    </div>
   );
 };
 

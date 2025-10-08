@@ -38,10 +38,10 @@ const NavBar = () => {
   };
 
   const containerStyle = {
-    position:'absolute',
-    zIndex:'10',
-    paddingTop:'40px',
-    right:'50%',
+    position: 'absolute',
+    zIndex: '10',
+    paddingTop: '40px',
+    right: '50%',
   };
 
   return (
