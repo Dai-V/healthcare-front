@@ -11,8 +11,8 @@ const LoginForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    console.log('Login attempt:', { email, password });
-    login(e.formData)
+    console.log('Login attempt:')
+    login()
   };
 
   const containerStyle = {
@@ -130,26 +130,26 @@ const LoginForm = () => {
     cursor: 'pointer',
   };
 
-  async function login(formData) {
-    //  const response = await fetch(import.meta.env.VITE_BACKEND+'api/auth/login', {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json', // Specify content type as JSON
-    //     },
-    //     body: JSON.stringify(formData), // Convert form data to JSON string
-    //   });
+  async function login() {
+    const response = await fetch(import.meta.env.VITE_BACKEND + 'api/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        'email': email,
+        'password': password
+      }),
+    });
 
-    //   if (!response.ok) {
-    //     throw new Error(`HTTP error! status: ${response.status}`)
-    //   }
-    // const data = await response.json()
-    let data = {
-      'id': 1,
-      'role': 'patient'
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
     }
+    const data = await response.json()
+
     if (data['id'] && data['role']) {
       secureLocalStorage.setItem("id", data.id)
-      secureLocalStorage.setItem("role", data.role)
+      secureLocalStorage.setItem("role", data.role.toLowerCase())
       navigate('/dashboard')
     }
     else {

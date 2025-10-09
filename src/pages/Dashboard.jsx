@@ -16,15 +16,15 @@ function Dashboard() {
             navigate('/login')
         }
     }, []);
-    if (role.toLowerCase() == 'patient')
+    if (role == 'patient')
         return (
             <DashboardPatientPage />
         )
-    if (role.toLowerCase() == 'doctor')
+    if (role == 'doctor')
         return (
             <DashboardDoctorPage />
         )
-    if (role.toLowerCase() == 'staff')
+    if (role == 'staff')
         return (
             <DashboardStaffPage />
         )

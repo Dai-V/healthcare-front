@@ -1,17 +1,26 @@
 import { ArrowRight, Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 
 const SignUpForm = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [dateOfBirth, setDateOfBirth] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [sex, setSex] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const navigate = useNavigate()
 
 
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    console.log('Login attempt:')
+    login()
+  };
 
   const containerStyle = {
     margin: 'auto',
@@ -123,13 +132,24 @@ const SignUpForm = () => {
     cursor: 'pointer',
   };
 
-  async function SignUp() {
+  async function signUp() {
+    if (sex == '') {
+      setSex('Other')
+    }
     const response = await fetch(import.meta.env.VITE_BACKEND + 'api/auth/signup', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json', // Specify content type as JSON
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify(formData), // Convert form data to JSON string
+      body: JSON.stringify({
+        'firstName': firstName,
+        'lastName': lastName,
+        'email': email,
+        'password': password,
+        'dateOfBirth': dateOfBirth,
+        'sex': sex,
+        'phoneNumber': phoneNumber
+      }),
     });
 
     if (!response.ok) {
@@ -140,7 +160,7 @@ const SignUpForm = () => {
       navigate('/login')
     }
     else {
-      throw new Error('error parsing data')
+      throw new Error('Error parsing data')
     }
   }
 
@@ -148,7 +168,7 @@ const SignUpForm = () => {
     <div style={containerStyle}>
       <div>
         <h1 style={titleStyle}>Sign Up</h1>
-        <form action={SignUp} style={formContainerStyle} >
+        <form action={signUp} style={formContainerStyle} >
           <div>
 
             <input
@@ -178,6 +198,71 @@ const SignUpForm = () => {
                 ...inputStyle,
               }}
             />
+
+            <input
+              type="text"
+              value={dateOfBirth}
+              onChange={(e) => {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length <= 8) {
+                  let formatted = '';
+                  if (value.length >= 1) {
+                    formatted = value.slice(0, 4);
+                  }
+                  if (value.length >= 5) {
+                    formatted += '-' + value.slice(4, 6);
+                  }
+                  if (value.length >= 7) {
+                    formatted += '-' + value.slice(6, 8);
+                  }
+                  setDateOfBirth(formatted);
+                }
+              }}
+              placeholder="Date of Birth (YYYY-MM-DD)"
+              maxLength="10"
+              style={{
+                ...inputStyle,
+              }}
+            />
+            <input
+              type="text"
+              value={phoneNumber}
+              onChange={(e) => {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length <= 10) {
+                  let formatted = '';
+                  if (value.length >= 1) {
+                    formatted = '(' + value.slice(0, 3);
+                  }
+                  if (value.length >= 4) {
+                    formatted += ') ' + value.slice(3, 6);
+                  }
+                  if (value.length >= 7) {
+                    formatted += '-' + value.slice(6, 10);
+                  }
+                  setPhoneNumber(formatted);
+                }
+              }}
+              placeholder="Phone Number (XXX) XXX-XXXX"
+              maxLength="14"
+              style={{
+                ...inputStyle,
+              }}
+            />
+            <select
+              value={sex}
+              onChange={(e) => setSex(e.target.value)}
+              style={{
+                ...inputStyle,
+                cursor: 'pointer',
+                fontWeight: '500',
+              }}
+            >
+              <option value="" style={{ color: '#1e3a8a', backgroundColor: 'white' }} disabled selected hidden>Select Sex</option>
+              <option value="male" style={{ color: '#1e3a8a', backgroundColor: 'white' }}>Male</option>
+              <option value="female" style={{ color: '#1e3a8a', backgroundColor: 'white' }}>Female</option>
+              <option value="other" style={{ color: '#1e3a8a', backgroundColor: 'white' }}>Other</option>
+            </select>
             <div style={passwordContainerStyle}>
               <input
                 type={showPassword ? 'text' : 'password'}
@@ -252,7 +337,7 @@ const SignUpForm = () => {
         </form>
         <div style={forgotPasswordStyle}>
           <Link to="/login" style={signUpLinkStyle}>
-            Don't have an account? Sign Up
+            Already have an account? Login
           </Link>
 
         </div>
