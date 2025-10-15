@@ -43,18 +43,16 @@ function HelloLogo() {
     margin: 'auto',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: '100px',
+    padding: '10px',
     width: '100%',
-    maxWidth: '450px',
     height: 'auto',
-    maxHeight: '250px',
   }
   const gifSection = {
     position: 'absolute',
     zIndex: '11',
-    width: '40%',
-    marginTop: '-20%',
-    marginLeft: '20%'
+    width: '15%',
+    marginTop: '-10%',
+    marginLeft: '45%'
 
   }
 
@@ -82,7 +80,7 @@ function HelloLogo() {
           Hello,
         </h1>
         <h2 style={username}>
-          {role == 'doctor' ? 'Dr. ' : ''}{firstName + ' ' + lastName}
+          {role == 'doctor' ? 'Dr. ' : ''}{firstName}
         </h2>
       </div>
     </div>

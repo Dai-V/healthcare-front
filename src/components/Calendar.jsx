@@ -13,14 +13,14 @@ const Calendar = () => {
   const daysOfWeek = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
   const containerStyle = {
-   
+
   };
 
   const calendarBoxStyle = {
     backgroundColor: '#F6FAFFB2',
     borderRadius: '32px',
     padding: '32px',
-    width: '320px',
+    width: '20em',
     boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)'
   };
 
@@ -91,7 +91,7 @@ const Calendar = () => {
     const month = date.getMonth();
     const firstDay = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
-    
+
     return { firstDay, daysInMonth };
   };
 
@@ -118,7 +118,7 @@ const Calendar = () => {
           <button onClick={() => changeMonth(-1)} style={navButtonStyle}>
             <ChevronLeft size={20} />
           </button>
-          
+
           <div style={monthBadgeStyle}>
             {monthNames[currentDate.getMonth()]}  {currentDate.getFullYear()}
           </div>

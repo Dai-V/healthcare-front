@@ -1,5 +1,7 @@
 import Calendar from '../components/Calendar'
 import HelloLogo from '../components/HelloLogo';
+import NavMenu from '../components/NavMenu';
+
 
 
 function DashboardStaffPage() {
@@ -29,6 +31,7 @@ function DashboardStaffPage() {
         <div style={body}>
             <Calendar />
             <HelloLogo />
+            <NavMenu role={role} />
         </div>
     )
 }
