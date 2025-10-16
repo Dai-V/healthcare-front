@@ -86,9 +86,14 @@ const styles = {
     },
 };
 
-const NavMenu = (role) => {
-    const [activeItem, setActiveItem] = React.useState('Appointments');
+const NavMenu = ({ role, activeView, onViewChange }) => {
     const [searchValue, setSearchValue] = React.useState('');
+
+    const handleMenuClick = (view) => {
+        if (onViewChange) {
+            onViewChange(view);
+        }
+    };
 
     return (
         <div style={styles.container}>
@@ -96,9 +101,9 @@ const NavMenu = (role) => {
                 <button
                     style={{
                         ...styles.menuItem,
-                        ...(activeItem === 'Appointments' ? styles.activeItem : {}),
+                        ...(activeView === 'Appointments' ? styles.activeItem : {}),
                     }}
-                    onClick={() => setActiveItem('Appointments')}
+                    onClick={() => handleMenuClick('Appointments')}
                 >
                     Appointments
                 </button>
@@ -108,21 +113,21 @@ const NavMenu = (role) => {
                 <button
                     style={{
                         ...styles.menuItem,
-                        ...(activeItem === 'Requests' ? styles.activeItem : {}),
+                        ...(activeView === 'Requests' ? styles.activeItem : {}),
                     }}
-                    onClick={() => setActiveItem('Requests')}
+                    onClick={() => handleMenuClick('Requests')}
                 >
                     Requests
                 </button>
-                <div style={styles.badge}>0</div>
+                {/* <div style={styles.badge}>0</div> */}
             </div>
 
             <button
                 style={{
                     ...styles.menuItem,
-                    ...(activeItem === 'Profile' ? styles.activeItem : {}),
+                    ...(activeView === 'Profile' ? styles.activeItem : {}),
                 }}
-                onClick={() => setActiveItem('Profile')}
+                onClick={() => handleMenuClick('Profile')}
             >
                 Profile
             </button>

@@ -5,14 +5,17 @@ import secureLocalStorage from 'react-secure-storage';
 import NavMenu from '../components/NavMenu';
 import LoginLogo from '../components/LoginLogo';
 import PatientAppointment from '../components/PatientAppointment.jsx';
-
+import UserProfile from '../components/UserProfile.jsx';
+// import AppointmentRequests from '../components/AppointmentRequests.jsx'; // Create this component
 
 function DashboardPatientPage() {
     const [id, setId] = useState(secureLocalStorage.getItem("id"));
     const [role, setRole] = useState(secureLocalStorage.getItem("role"));
+    const [selectedDate, setSelectedDate] = useState(new Date());
+    const [activeView, setActiveView] = useState('Appointments'); // Add this state
+
     useEffect(() => {
     }, []);
-
 
     const body = {
         overflow: 'hidden',
@@ -30,19 +33,15 @@ function DashboardPatientPage() {
         gridTemplateColumns: '400px 1fr',
         gridTemplateRows: 'auto 1fr',
         padding: '1vw'
-
     }
 
     const styles = {
-
-        // Grid Area: Row 1, Column 1
         welcomeLogo: {
             gridColumn: '1 / 2',
             gridRow: '1 / 2',
             marginTop: '30px',
             padding: '0 40px 0px',
         },
-        // Grid Area: Row 1-2, Column 2 (spans full height of right side)
         mainContentWrapper: {
             gridColumn: '2 / 3',
             gridRow: '2 / 3',
@@ -50,7 +49,6 @@ function DashboardPatientPage() {
             flexDirection: 'column',
             height: '100%',
         },
-        // Grid Area: Row 2, Column 1
         sidebar: {
             gridColumn: '1 / 2',
             gridRow: '2 / 3',
@@ -59,7 +57,6 @@ function DashboardPatientPage() {
             flexDirection: 'column',
             gap: '20px',
         },
-        // Inside MainContentWrapper
         okHealthLogo: {
             gridColumn: '2/3',
             gridRow: '1/2',
@@ -68,9 +65,9 @@ function DashboardPatientPage() {
             fontWeight: '800',
             color: '#5b7fb8',
             width: '200px',
-            height: '100px'
+            height: '100px',
+            marginTop: '-20px'
         },
-        // Placeholder styles for components
         calendar: {
             borderRadius: '24px',
             padding: '20px',
@@ -92,7 +89,6 @@ function DashboardPatientPage() {
             fontWeight: '600',
         },
         mainContent: {
-
             borderRadius: '24px',
             padding: '20px',
             flex: 1,
@@ -101,6 +97,20 @@ function DashboardPatientPage() {
             justifyContent: 'stretch',
             color: '#5b7fb8',
         },
+    };
+
+    // Render content based on active view
+    const renderMainContent = () => {
+        switch (activeView) {
+            case 'Appointments':
+                return <PatientAppointment selectedDate={selectedDate} />;
+            case 'Profile':
+                return <UserProfile />;
+            case 'Requests':
+                return <div>AppointmentRequests Component Coming Soon...</div>;
+            default:
+                return <PatientAppointment selectedDate={selectedDate} />;
+        }
     };
 
     return (
@@ -114,30 +124,32 @@ function DashboardPatientPage() {
             <div style={styles.sidebar}>
                 {/* Calendar Component */}
                 <div style={styles.calendar}>
-                    <Calendar />
+                    <Calendar onDateSelect={setSelectedDate} />
                 </div>
 
                 {/* NavMenu Component */}
                 <div style={styles.navMenu}>
-                    <NavMenu role={role} />
+                    <NavMenu
+                        role={role}
+                        activeView={activeView}
+                        onViewChange={setActiveView}
+                    />
                 </div>
             </div>
+
             <div style={styles.okHealthLogo}>
                 <LoginLogo />
             </div>
+
             {/* MainContent Area - Entire Right Side */}
             <div style={styles.mainContentWrapper}>
-
-
                 {/* MainContent Component */}
                 <div style={styles.mainContent}>
-                    <PatientAppointment />
+                    {renderMainContent()}
                 </div>
             </div>
         </div>
     );
 };
-
-
 
 export default DashboardPatientPage

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-const Calendar = () => {
+const Calendar = ({ onDateSelect }) => {  // Add this prop
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
 
@@ -12,9 +12,7 @@ const Calendar = () => {
 
   const daysOfWeek = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
-  const containerStyle = {
-
-  };
+  const containerStyle = {};
 
   const calendarBoxStyle = {
     backgroundColor: '#F6FAFFB2',
@@ -71,6 +69,13 @@ const Calendar = () => {
     gap: '8px'
   };
 
+  // Add this helper function
+  const isSameDate = (date1, date2) => {
+    return date1.getDate() === date2.getDate() &&
+      date1.getMonth() === date2.getMonth() &&
+      date1.getFullYear() === date2.getFullYear();
+  };
+
   const getDayStyle = (day, isSelected) => ({
     aspectRatio: '1',
     display: 'flex',
@@ -111,6 +116,24 @@ const Calendar = () => {
     setCurrentDate(newDate);
   };
 
+  // Add this function to handle date clicks
+  const handleDateClick = (day) => {
+    if (!day) return;
+
+    const newSelectedDate = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      day
+    );
+    setSelectedDate(newSelectedDate);
+
+    // Call the callback function if provided
+    if (onDateSelect) {
+      onDateSelect(newSelectedDate);
+      console.log(newSelectedDate)
+    }
+  };
+
   return (
     <div style={containerStyle}>
       <div style={calendarBoxStyle}>
@@ -120,7 +143,7 @@ const Calendar = () => {
           </button>
 
           <div style={monthBadgeStyle}>
-            {monthNames[currentDate.getMonth()]}  {currentDate.getFullYear()}
+            {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
           </div>
 
           <button onClick={() => changeMonth(1)} style={navButtonStyle}>
@@ -137,25 +160,34 @@ const Calendar = () => {
         </div>
 
         <div style={daysGridStyle}>
-          {calendarDays.map((day, index) => (
-            <div
-              key={index}
-              onClick={() => day && setSelectedDate(day)}
-              style={getDayStyle(day, day === selectedDate)}
-              onMouseEnter={(e) => {
-                if (day && day !== selectedDate) {
-                  e.target.style.backgroundColor = '#b8d1f0';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (day && day !== selectedDate) {
-                  e.target.style.backgroundColor = 'transparent';
-                }
-              }}
-            >
-              {day}
-            </div>
-          ))}
+          {calendarDays.map((day, index) => {
+            const dateForDay = day ? new Date(
+              currentDate.getFullYear(),
+              currentDate.getMonth(),
+              day
+            ) : null;
+            const isSelected = dateForDay && isSameDate(dateForDay, selectedDate);
+
+            return (
+              <div
+                key={index}
+                onClick={() => handleDateClick(day)}
+                style={getDayStyle(day, isSelected)}
+                onMouseEnter={(e) => {
+                  if (day && !isSelected) {
+                    e.target.style.backgroundColor = '#b8d1f0';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (day && !isSelected) {
+                    e.target.style.backgroundColor = 'transparent';
+                  }
+                }}
+              >
+                {day}
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>

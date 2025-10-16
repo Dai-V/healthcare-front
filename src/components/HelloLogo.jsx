@@ -80,7 +80,7 @@ function HelloLogo() {
           Hello,
         </h1>
         <h2 style={username}>
-          {role == 'doctor' ? 'Dr. ' : ''}{firstName}
+          {role == 'doctor' ? 'Dr. ' : ''}{firstName} {lastName}
         </h2>
       </div>
     </div>
