@@ -28,7 +28,7 @@ const SignUpForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault()
     console.log('Login attempt:')
-    logIn()
+    signUp()
   };
 
   const containerStyle = {

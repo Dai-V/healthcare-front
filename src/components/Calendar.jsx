@@ -1,5 +1,5 @@
-import { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useState } from 'react';
 
 const Calendar = ({ onDateSelect }) => {  // Add this prop
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -15,18 +15,22 @@ const Calendar = ({ onDateSelect }) => {  // Add this prop
   const containerStyle = {};
 
   const calendarBoxStyle = {
-    backgroundColor: '#F6FAFFB2',
+    backgroundColor: '#F6FAFF',
     borderRadius: '32px',
-    padding: '32px',
+    padding: '20px',
     width: '20em',
-    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)'
+    boxShadow: `
+      0 6px 12px rgba(0, 0, 0, 0.3),
+      0 12px 28px rgba(0, 0, 0, 0.25)
+  `,
   };
 
   const headerStyle = {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: '24px'
+    marginBottom: '24px',
+    fontFamily: '"Montserrat", sans-serif',
   };
 
   const navButtonStyle = {
@@ -40,9 +44,9 @@ const Calendar = ({ onDateSelect }) => {  // Add this prop
   };
 
   const monthBadgeStyle = {
-    backgroundColor: '#7ba7e8',
+    backgroundColor: '#82ABF8',
     color: 'white',
-    padding: '8px 20px',
+    padding: '6px 15px',
     borderRadius: '20px',
     fontSize: '14px',
     fontWeight: '500'

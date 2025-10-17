@@ -1,9 +1,9 @@
-import Calendar from '../components/Calendar'
-import HelloLogo from '../components/HelloLogo';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import secureLocalStorage from 'react-secure-storage';
-import NavMenu from '../components/NavMenu';
+import Calendar from '../components/Calendar';
+import HelloLogo from '../components/HelloLogo';
 import LoginLogo from '../components/LoginLogo';
+import NavMenu from '../components/NavMenu';
 import PatientAppointment from '../components/PatientAppointment.jsx';
 import UserProfile from '../components/UserProfile.jsx';
 // import AppointmentRequests from '../components/AppointmentRequests.jsx'; // Create this component
@@ -30,9 +30,13 @@ function DashboardPatientPage() {
         backgroundPosition: 'center center',
         backgroundImage: 'linear-gradient(to left, #F8EDE5 30.4%, #82ABF8 88.48%)',
         display: 'grid',
-        gridTemplateColumns: '400px 1fr',
+        gridTemplateColumns: '380px minmax(0, 1fr)',
         gridTemplateRows: 'auto 1fr',
-        padding: '1vw'
+        padding: '1vw',
+        overflowY: 'auto',
+        overflowX: 'hidden',
+        alignItems: 'stretch',
+        justifyItems: 'stretch'
     }
 
     const styles = {
@@ -48,6 +52,7 @@ function DashboardPatientPage() {
             display: 'flex',
             flexDirection: 'column',
             height: '100%',
+            justifyContent: 'center',
         },
         sidebar: {
             gridColumn: '1 / 2',
@@ -55,7 +60,9 @@ function DashboardPatientPage() {
             padding: '0 30px 30px 30px',
             display: 'flex',
             flexDirection: 'column',
-            gap: '20px',
+            justifyContent: 'space-between',
+            flex: '100%',
+            height: '100%',
         },
         okHealthLogo: {
             gridColumn: '2/3',
@@ -95,7 +102,6 @@ function DashboardPatientPage() {
             display: 'flex',
             alignItems: 'stretch',
             justifyContent: 'stretch',
-            color: '#5b7fb8',
         },
     };
 

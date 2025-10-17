@@ -1,6 +1,5 @@
+import { useEffect, useState } from 'react';
 import secureLocalStorage from 'react-secure-storage';
-import { Link, Navigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
 import dashAnim from '../assets/dashboard_anim.gif';
 
 
@@ -51,8 +50,8 @@ function HelloLogo() {
     position: 'absolute',
     zIndex: '11',
     width: '15%',
-    marginTop: '-10%',
-    marginLeft: '45%'
+    marginTop: '-4%',
+    marginLeft: '46%'
 
   }
 
@@ -64,12 +63,12 @@ function HelloLogo() {
   const hello = {
     fontSize: '3rem',
     fontWeight: 'bold',
-    color: '#2563eb',
+    color: '#3A5FCF',
   }
   const username = {
     fontSize: '3rem',
     fontWeight: 'bold',
-    color: '#1d4ed8',
+    color: '#3A5FCF',
   }
 
   return (

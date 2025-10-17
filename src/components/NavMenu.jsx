@@ -4,10 +4,14 @@ const styles = {
     container: {
         position: 'absolute',
         padding: '20px',
-        background: 'linear-gradient(135deg, #d4e3f7 0%, #c5d9f2 100%)',
+        background: '#F6FAFF',
         borderRadius: '24px',
-        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-        width: '20em'
+        fontFamily: '"Montserrat", sans-serif',
+        width: '20em',
+        boxShadow: `
+            0 6px 12px rgba(0, 0, 0, 0.3),
+            0 12px 28px rgba(0, 0, 0, 0.25)
+        `,
     },
     menuItem: {
         position: 'relative',
@@ -22,13 +26,20 @@ const styles = {
         color: '#5b7fb8',
         cursor: 'pointer',
         textAlign: 'center',
-        boxShadow: '0 2px 8px rgba(91, 127, 184, 0.1)',
+        boxShadow: `
+            0 6px 12px rgba(0, 0, 0, 0.3),
+            0 12px 28px rgba(0, 0, 0, 0.25)
+        `,
         transition: 'all 0.2s ease',
     },
     activeItem: {
-        background: 'linear-gradient(135deg, #7ea7d8 0%, #a4c2e4 100%)',
+        background: '#82ABF8',
         color: 'white',
-        boxShadow: '0 4px 12px rgba(91, 127, 184, 0.25)',
+        boxShadow: `
+            inset 3px 3px 6px rgba(0, 0, 0, 0.25),
+            inset -3px -3px 6px rgba(255, 255, 255, 0.6)
+        `,
+        transition: 'all 0.2s ease',
     },
     badge: {
         position: 'absolute',
@@ -44,7 +55,10 @@ const styles = {
         color: 'white',
         fontSize: '12px',
         fontWeight: '600',
-        boxShadow: '0 2px 6px rgba(255, 107, 107, 0.4)',
+        boxShadow: `
+            0 6px 12px rgba(0, 0, 0, 0.3),
+            0 12px 28px rgba(0, 0, 0, 0.25)
+        `,
     },
     searchContainer: {
         position: 'relative',
@@ -53,13 +67,18 @@ const styles = {
     searchInput: {
         width: '100%',
         padding: '14px 44px 14px 20px',
-        background: 'white',
         border: 'none',
         borderRadius: '16px',
         fontSize: '15px',
-        color: '#5b7fb8',
-        boxShadow: '0 2px 8px rgba(91, 127, 184, 0.1)',
+        color: '#E3DCFF',
+        boxShadow: `
+            0 6px 12px rgba(0, 0, 0, 0.3),
+            0 12px 28px rgba(0, 0, 0, 0.25)
+        `,
         outline: 'none',
+        appearance: 'none',
+        WebkitAppearance: 'none',
+        MozAppearance: 'none'
     },
     searchButton: {
         position: 'absolute',
@@ -68,7 +87,7 @@ const styles = {
         transform: 'translateY(-50%)',
         width: '32px',
         height: '32px',
-        background: 'linear-gradient(135deg, #7ea7d8 0%, #a4c2e4 100%)',
+        background: '#82ABF8',
         border: 'none',
         borderRadius: '10px',
         cursor: 'pointer',
@@ -76,6 +95,10 @@ const styles = {
         alignItems: 'center',
         justifyContent: 'center',
         transition: 'all 0.2s ease',
+        boxShadow: `
+            0 6px 14px rgba(0, 0, 0, 0.22),
+            0 12px 28px rgba(0, 0, 0, 0.18)
+        `,
     },
     searchIcon: {
         width: '16px',

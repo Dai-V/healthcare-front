@@ -1,5 +1,5 @@
-import { React, useState, useEffect } from 'react';
 import { Clock, User } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import secureLocalStorage from 'react-secure-storage';
 
 const timeSlots = [
@@ -14,12 +14,15 @@ const timeSlots = [
 
 const styles = {
     card: {
-        backgroundColor: '#F6FAFFB2',
+        backgroundColor: '#F6FAFF',
         borderRadius: '2rem',
         padding: '2rem',
         width: '100%',
         midWidth: '100px',
-        boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+        boxShadow: `
+            0 6px 12px rgba(0, 0, 0, 0.3),
+            0 12px 28px rgba(0, 0, 0, 0.25)
+        `,
         display: 'flex',
         flexDirection: 'column',
         height: '100%'
@@ -44,7 +47,11 @@ const styles = {
         display: 'flex',
         alignItems: 'center',
         gap: '0.5rem',
-        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+        // softer shadow for small things
+        boxShadow: `
+            0 6px 14px rgba(0, 0, 0, 0.22),
+            0 12px 28px rgba(0, 0, 0, 0.18)
+        `,
         minWidth: '140px',
         flex: 1,
     },
