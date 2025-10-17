@@ -1,6 +1,6 @@
 import { ArrowRight, Eye, EyeOff } from 'lucide-react';
-import { useState } from 'react';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 const SignUpForm = () => {
   const [firstName, setFirstName] = useState('');
@@ -15,11 +15,20 @@ const SignUpForm = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate()
 
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+
 
   const handleSubmit = (e) => {
     e.preventDefault()
     console.log('Login attempt:')
-    login()
+    logIn()
   };
 
   const containerStyle = {
@@ -29,6 +38,20 @@ const SignUpForm = () => {
     justifyContent: 'center',
     padding: '20px',
     fontFamily: '"Montserrat", sans-serif',
+  };
+
+  const gridContainerStyle = {
+    display: 'grid',
+    gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
+    gap: '16px',
+    justifyItems: 'stretch',
+    alignItems: 'stretch',
+  };
+
+  const columnStyle = {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '12px',
   };
 
   const titleStyle = {
@@ -46,7 +69,7 @@ const SignUpForm = () => {
     padding: '32px',
     boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
     width: '100%',
-    maxWidth: '380px',
+    maxWidth: isMobile ? '380px' : '740px',
     backdropFilter: 'blur(8px)'
   };
 
@@ -56,9 +79,9 @@ const SignUpForm = () => {
     backgroundColor: '#9FBFFA',
     border: 'none',
     borderRadius: '22px',
-    fontSize: '16px',
+    fontSize: '14px',
     color: '#82ABF8',
-    marginBottom: '16px',
+    marginBottom: '12px',
     outline: 'none',
     boxSizing: 'border-box',
     boxShadow: `
@@ -72,7 +95,8 @@ const SignUpForm = () => {
 
   const passwordContainerStyle = {
     position: 'relative',
-    marginBottom: '20px'
+    marginBottom: '0px',
+    height: '100%'
   };
 
   const passwordInputStyle = {
@@ -84,8 +108,8 @@ const SignUpForm = () => {
   const eyeButtonStyle = {
     position: 'absolute',
     right: '18px',
-    top: '50%',
-    transform: 'translateY(-50%)',
+    top: '20%',
+    //transform: 'translateY(-150%)',
     background: 'none',
     border: 'none',
     cursor: 'pointer',
@@ -115,6 +139,11 @@ const SignUpForm = () => {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center'
+  };
+
+  const footerStyle = {
+    textAlign: 'center',
+    marginTop: '18px',
   };
 
   const forgotPasswordStyle = {
@@ -168,182 +197,77 @@ const SignUpForm = () => {
     <div style={containerStyle}>
       <div>
         <h1 style={titleStyle}>Sign Up</h1>
-        <form action={signUp} style={formContainerStyle} >
-          <div>
 
-            <input
-              type="text"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-              placeholder="First Name"
-              style={{
-                ...inputStyle,
-              }}
-            />
-            <input
-              type="text"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-              placeholder="Last Name"
-              style={{
-                ...inputStyle,
-              }}
-            />
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Email"
-              style={{
-                ...inputStyle,
-              }}
-            />
-
-            <input
-              type="text"
-              value={dateOfBirth}
-              onChange={(e) => {
-                let value = e.target.value.replace(/\D/g, '');
-                if (value.length <= 8) {
-                  let formatted = '';
-                  if (value.length >= 1) {
-                    formatted = value.slice(0, 4);
-                  }
-                  if (value.length >= 5) {
-                    formatted += '-' + value.slice(4, 6);
-                  }
-                  if (value.length >= 7) {
-                    formatted += '-' + value.slice(6, 8);
-                  }
-                  setDateOfBirth(formatted);
-                }
-              }}
-              placeholder="Date of Birth (YYYY-MM-DD)"
-              maxLength="10"
-              style={{
-                ...inputStyle,
-              }}
-            />
-            <input
-              type="text"
-              value={phoneNumber}
-              onChange={(e) => {
-                let value = e.target.value.replace(/\D/g, '');
-                if (value.length <= 10) {
-                  let formatted = '';
-                  if (value.length >= 1) {
-                    formatted = '(' + value.slice(0, 3);
-                  }
-                  if (value.length >= 4) {
-                    formatted += ') ' + value.slice(3, 6);
-                  }
-                  if (value.length >= 7) {
-                    formatted += '-' + value.slice(6, 10);
-                  }
-                  setPhoneNumber(formatted);
-                }
-              }}
-              placeholder="Phone Number (XXX) XXX-XXXX"
-              maxLength="14"
-              style={{
-                ...inputStyle,
-              }}
-            />
-            <select
-              value={sex}
-              onChange={(e) => setSex(e.target.value)}
-              style={{
-                ...inputStyle,
-                cursor: 'pointer',
-                fontWeight: '500',
-              }}
-            >
-              <option value="" style={{ color: '#1e3a8a', backgroundColor: 'white' }} disabled selected hidden>Select Sex</option>
-              <option value="male" style={{ color: '#1e3a8a', backgroundColor: 'white' }}>Male</option>
-              <option value="female" style={{ color: '#1e3a8a', backgroundColor: 'white' }}>Female</option>
-              <option value="other" style={{ color: '#1e3a8a', backgroundColor: 'white' }}>Other</option>
-            </select>
-            <div style={passwordContainerStyle}>
+        <form onSubmit={handleSubmit} style={formContainerStyle}>
+          <div style={gridContainerStyle}>
+            <div style={columnStyle}>
+              <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="Last Name" style={inputStyle} />
+              <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="First Name" style={inputStyle} />
+              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" style={inputStyle} />
               <input
-                type={showPassword ? 'text' : 'password'}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password"
-                autoComplete="new-password"
+                type="date"
+                value={dateOfBirth}
+                onChange={(e) => setDateOfBirth(e.target.value)}
+                max={new Date(new Date().setDate(new Date().getDate() - 1))
+                  .toISOString()
+                  .split("T")[0]}
+                placeholder="Date of Birth"
                 style={{
-                  ...passwordInputStyle,
+                  ...inputStyle,
+                  colorScheme: 'light',
                 }}
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                style={eyeButtonStyle}
-
-                onMouseEnter={(e) => {
-                  e.target.style.backgroundColor = 'rgba(30, 64, 175, 0.1)';
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.backgroundColor = 'transparent';
-                }}
-              >
-                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-              </button>
+            />
             </div>
+            <div style={columnStyle}>
+              <input type="text" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} placeholder="Phone Number (XXX) XXX-XXXX" style={inputStyle} />
 
-            <div style={passwordContainerStyle}>
-              <input
+              <select value={sex} onChange={(e) => setSex(e.target.value)} style={{ ...inputStyle, cursor: 'pointer', fontWeight: '500' }}>
+                <option value="" disabled hidden>Select Sex</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+              </select>
 
-                type={showConfirmPassword ? 'text' : 'password'}
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="Confirm Password"
-                style={{
-                  ...passwordInputStyle,
-                }}
-              />
-              <button
-                type="button"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                style={eyeButtonStyle}
-                onMouseEnter={(e) => {
-                  e.target.style.backgroundColor = 'rgba(30, 64, 175, 0.1)';
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.backgroundColor = 'transparent';
-                }}
-              >
-                {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-              </button>
+              <div style={passwordContainerStyle}>
+                <input type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" style={passwordInputStyle} />
+                <button type="button" onClick={() => setShowPassword(!showPassword)} style={eyeButtonStyle}>
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
 
-            </div>
-
-
-            <div style={submitButtonContainerStyle}>
-              <button
-                style={submitButtonStyle}
-                onMouseEnter={(e) => {
-                  e.target.style.backgroundColor = '#3b82f6';
-                  e.target.style.transform = 'scale(1.05)';
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.backgroundColor = '#60a5fa';
-                  e.target.style.transform = 'scale(1)';
-                }}
-              >
-                <ArrowRight size={20} color="white" />
-              </button>
+              <div style={passwordContainerStyle}>
+                <input type={showConfirmPassword ? 'text' : 'password'} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Confirm Password" style={passwordInputStyle} />
+                <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} style={eyeButtonStyle}>
+                  {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
             </div>
           </div>
-        </form>
-        <div style={forgotPasswordStyle}>
-          <Link to="/login" style={signUpLinkStyle}>
-            Already have an account? Login
-          </Link>
 
+          <div style={submitButtonContainerStyle}>
+            <button
+              type="submit"
+              style={submitButtonStyle}
+              onMouseEnter={(e) => {
+                e.target.style.backgroundColor = '#3b82f6';
+                e.target.style.transform = 'scale(1.05)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.backgroundColor = '#60a5fa';
+                e.target.style.transform = 'scale(1)';
+              }}
+            >
+              <ArrowRight size={20} color="white" />
+            </button>
+          </div>
+        </form>
+        <div style={footerStyle}>
+          <Link to="/login" style={signUpLinkStyle}>
+            Already have an account? <u>Login</u>
+          </Link>
         </div>
       </div>
     </div>
   );
 };
-
 export default SignUpForm;

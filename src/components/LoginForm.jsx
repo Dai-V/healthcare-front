@@ -1,6 +1,6 @@
 import { ArrowRight, Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import secureLocalStorage from "react-secure-storage";
 const LoginForm = () => {
   const [email, setEmail] = useState('');
@@ -26,7 +26,7 @@ const LoginForm = () => {
 
   const titleStyle = {
     color: '#3A5FCF',
-    fontSize: '64px',
+    fontSize: window.innerWidth < 768 ? '42px' : '64px',
     fontWeight: '400',
     textAlign: 'center',
     marginBottom: '5px',
@@ -36,7 +36,7 @@ const LoginForm = () => {
   const formContainerStyle = {
     backgroundColor: 'rgba(229, 231, 235, 0.95)',
     borderRadius: '28px',
-    padding: '32px',
+    padding: window.innerWidth < 768 ? '20px' : '32px',
     boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
     width: '100%',
     maxWidth: '380px',
@@ -222,12 +222,22 @@ const LoginForm = () => {
           </div>
         </form>
         <div style={forgotPasswordStyle}>
-          <Link to="/signup" style={signUpLinkStyle}>
-            Don't have an account? Sign Up
+          <span style={{ color: '#3A5FCF', fontSize: '16px' }}>
+            Don’t have an account?{' '}
+            <Link
+              to="/signup"
+              style={{
+              color: '#3A5FCF',
+              textDecoration: 'underline',
+              fontWeight: '500',
+              }}
+            >
+            Sign Up
           </Link>
-        </div>
+        </span>
       </div>
     </div>
+  </div>
   );
 };
 
