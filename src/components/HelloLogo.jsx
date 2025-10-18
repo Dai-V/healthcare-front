@@ -7,7 +7,7 @@ import dashAnim from '../assets/dashboard_anim.gif';
 function HelloLogo() {
   const [id, setId] = useState(secureLocalStorage.getItem("id"));
   const [role, setRole] = useState(secureLocalStorage.getItem("role"));
-  const [firstName, setFirstName] = useState('');
+  const [firstName, setFirstName] = useState('Loading...');
   const [lastName, setLastName] = useState('');
   useEffect(() => {
     async function fetchName() {
@@ -69,6 +69,9 @@ function HelloLogo() {
     fontSize: '3rem',
     fontWeight: 'bold',
     color: '#3A5FCF',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
   }
 
   return (
