@@ -7,6 +7,17 @@ const styles = {
         width: '100%',
         height: '100%',
         overflow: 'auto',
+        backgroundColor: '#F6FAFF',
+        padding: '1rem',
+        borderRadius: '24px'
+    },
+
+    contentWrapper: {
+        backgroundColor: 'white',
+        borderRadius: '1.5rem',
+        padding: '2rem',
+        margin: '0 auto',
+        maxWidth: '1200px',
     },
     headerSection: {
         display: 'flex',
