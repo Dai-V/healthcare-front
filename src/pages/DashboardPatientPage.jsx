@@ -98,6 +98,7 @@ function DashboardPatientPage() {
         mainContent: {
             borderRadius: '24px',
             padding: '20px',
+            paddingBottom: '0px',
             flex: 1,
             display: 'flex',
             alignItems: 'stretch',
