@@ -23,7 +23,25 @@ const SignUpForm = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  const handlePhoneNumberChange = (e) => {
+    const input = e.target.value;
 
+    // Remove all non-digit characters
+    const cleaned = input.replace(/\D/g, '');
+
+    // Limit to 10 digits
+    const limited = cleaned.slice(0, 10);
+
+    // Format as xxx-xxx-xxxx
+    let formatted = limited;
+    if (limited.length > 6) {
+      formatted = `${limited.slice(0, 3)}-${limited.slice(3, 6)}-${limited.slice(6)}`;
+    } else if (limited.length > 3) {
+      formatted = `${limited.slice(0, 3)}-${limited.slice(3)}`;
+    }
+
+    setPhoneNumber(formatted);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -216,10 +234,17 @@ const SignUpForm = () => {
                   ...inputStyle,
                   colorScheme: 'light',
                 }}
-            />
+              />
             </div>
             <div style={columnStyle}>
-              <input type="text" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} placeholder="Phone Number (XXX) XXX-XXXX" style={inputStyle} />
+              <input
+                type="tel"
+                value={phoneNumber}
+                onChange={handlePhoneNumberChange}
+                placeholder="Phone Number XXX-XXX-XXXX"
+                style={inputStyle}
+                maxLength="12"
+              />
 
               <select value={sex} onChange={(e) => setSex(e.target.value)} style={{ ...inputStyle, cursor: 'pointer', fontWeight: '500' }}>
                 <option value="" disabled hidden>Select Sex</option>
