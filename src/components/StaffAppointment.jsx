@@ -15,7 +15,7 @@ const styles = {
     card: {
         backgroundColor: '#F6FAFF',
         borderRadius: '2rem',
-        padding: '2rem',
+        padding: '1rem 2rem 1rem 2rem',
         width: '100%',
         boxShadow: `
             0 6px 12px rgba(0, 0, 0, 0.3),
@@ -29,7 +29,6 @@ const styles = {
     headerRow: {
         display: 'flex',
         gap: '1rem',
-        marginBottom: '1rem',
         position: 'sticky',
         top: 0,
         backgroundColor: '#F6FAFF',
