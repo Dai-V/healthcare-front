@@ -121,15 +121,13 @@ const styles = {
 
 };
 
-const UserProfile = () => {
+const StaffProfile = () => {
     const [userInfo, setUserInfo] = useState({
         firstName: '',
         lastName: '',
         email: '',
-        phone: '',
-        dob: '',
+        role: '',
     });
-    const [appointments, setAppointments] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -152,93 +150,16 @@ const UserProfile = () => {
                 }
 
                 const userData = await userResponse.json();
+                setLoading(false);
 
-                // Fetch patient info
-                const patientResponse = await fetch(
-                    import.meta.env.VITE_BACKEND + 'api/patients/' + userId,
-                    {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                    }
-                );
-
-                if (!patientResponse.ok) {
-                    throw new Error(`HTTP error! status: ${patientResponse.status}`);
-                }
-
-                const patientData = await patientResponse.json();
 
                 setUserInfo({
                     firstName: userData.firstName || '',
                     lastName: userData.lastName || '',
                     email: userData.email || '',
-                    phone: patientData.phoneNumber || '',
-                    dob: patientData.dateOfBirth || '',
                     role: userData.role.toLowerCase() || '',
                 });
-
-                // Fetch appointments
-                const appointmentsResponse = await fetch(
-                    import.meta.env.VITE_BACKEND + 'api/appointments',
-                    {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                    }
-                );
-
-                if (!appointmentsResponse.ok) {
-                    throw new Error(`HTTP error! status: ${appointmentsResponse.status}`);
-                }
-
-                const appointmentsData = await appointmentsResponse.json();
-
-                // Filter appointments for this patient that are in the past
-                const now = new Date();
-                const pastAppointments = appointmentsData.filter(apt =>
-                    apt.patientUserId === userId && new Date(apt.scheduledStart) < now
-                );
-
-                // Fetch doctor details for each appointment
-                const appointmentsWithDoctors = await Promise.all(
-                    pastAppointments.map(async (apt) => {
-                        try {
-                            const doctorResponse = await fetch(
-                                import.meta.env.VITE_BACKEND + 'api/users/' + apt.doctorUserId,
-                                {
-                                    method: 'GET',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                    },
-                                }
-                            );
-
-                            if (doctorResponse.ok) {
-                                const doctorData = await doctorResponse.json();
-                                return {
-                                    ...apt,
-                                    doctorName: `Dr. ${doctorData.firstName} ${doctorData.lastName}`,
-                                };
-                            }
-                            return { ...apt, doctorName: 'Unknown Doctor' };
-                        } catch (error) {
-                            console.error('Error fetching doctor info:', error);
-                            return { ...apt, doctorName: 'Unknown Doctor' };
-                        }
-                    })
-                );
-
-                // Sort by date (most recent first)
-                appointmentsWithDoctors.sort((a, b) =>
-                    new Date(b.scheduledStart) - new Date(a.scheduledStart)
-                );
-
-                setAppointments(appointmentsWithDoctors);
-                setLoading(false);
-                console.log('User info loaded:', { userData, patientData, appointments: appointmentsWithDoctors });
+                console.log('User info loaded:', { userData });
             } catch (error) {
                 console.error('Error fetching user info:', error);
                 setLoading(false);
@@ -282,15 +203,6 @@ const UserProfile = () => {
                                 <span style={styles.infoValue}>{userInfo.email}</span>
                             </div>
 
-
-                            <div style={styles.infoItem}>
-                                <span style={styles.infoLabel}>Phone Number:</span>
-                                <span style={styles.infoValue}>{userInfo.phone || 'Not provided'}</span>
-                            </div>
-                            <div style={styles.infoItem}>
-                                <span style={styles.infoLabel}>DOB:</span>
-                                <span style={styles.infoValue}>{userInfo.dob || 'Not provided'}</span>
-                            </div>
                             <div style={styles.infoItem}>
                                 <span style={styles.infoLabel}>Role:</span>
                                 <span style={styles.infoValue}>{userInfo.role || 'Not provided'}</span>
@@ -298,44 +210,11 @@ const UserProfile = () => {
                         </div>
                     </div>
 
-                    {/* History of Appointments */}
-                    <div style={styles.historyCard}>
-                        <div style={styles.historyHeader}>History of Appointments</div>
-                        {appointments.length === 0 ? (
-                            <div style={{ padding: '1rem 1.5rem', color: '#666' }}>
-                                No past appointments
-                            </div>
-                        ) : (
-                            appointments.map((apt, index) => {
-                                const aptDate = new Date(apt.scheduledStart);
-                                const dateStr = `${(aptDate.getMonth() + 1).toString().padStart(2, '0')}/${aptDate.getDate().toString().padStart(2, '0')}`;
-                                const timeStr = aptDate.toLocaleTimeString('en-US', {
-                                    hour: 'numeric',
-                                    minute: '2-digit',
-                                    hour12: true
-                                });
 
-                                return (
-                                    <div
-                                        key={apt.id}
-                                        style={{
-                                            ...styles.appointmentRow,
-                                            ...(index % 2 === 0 ? styles.appointmentRowPurple : styles.appointmentRowWhite),
-                                        }}
-                                    >
-                                        <span style={styles.appointmentDate}>
-                                            {dateStr} | {timeStr}
-                                        </span>
-                                        <span style={styles.appointmentDoctor}>{apt.doctorName}</span>
-                                    </div>
-                                );
-                            })
-                        )}
-                    </div>
                 </>
             )}
         </div>
     );
 };
 
-export default UserProfile;
+export default StaffProfile;
