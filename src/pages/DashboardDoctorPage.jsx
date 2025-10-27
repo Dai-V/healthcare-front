@@ -103,6 +103,12 @@ function DashboardDoctorPage() {
         },
     };
 
+    // Handle date selection and switch to Appointments view
+    const handleDateSelect = (date) => {
+        setSelectedDate(date);
+        setActiveView('Appointments');
+    };
+
     // Render content based on active view
     const renderMainContent = () => {
         switch (activeView) {
@@ -126,7 +132,7 @@ function DashboardDoctorPage() {
             <div style={styles.sidebar}>
                 {/* Calendar Component */}
                 <div style={styles.calendar}>
-                    <Calendar onDateSelect={setSelectedDate} />
+                    <Calendar onDateSelect={handleDateSelect} />
                 </div>
 
                 {/* NavMenu Component */}
