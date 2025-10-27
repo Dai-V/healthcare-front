@@ -73,20 +73,34 @@ function HelloLogo() {
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
   }
-
-  return (
-    <div style={logoContainer}>
-      <div style={textWrapper}>
-        <img src={dashAnim} style={gifSection}></img>
-        <h1 style={hello}>
-          Hello,
-        </h1>
-        <h2 style={username}>
-          {role == 'doctor' ? 'Dr. ' : ''}{firstName} {lastName}
-        </h2>
+  if (role == 'doctor')
+    return (
+      <div style={logoContainer}>
+        <div style={textWrapper}>
+          <img src={dashAnim} style={gifSection}></img>
+          <h1 style={hello}>
+            Hello,
+          </h1>
+          <h2 style={username}>
+            Dr. {lastName}
+          </h2>
+        </div>
       </div>
-    </div>
-  )
+    )
+  else
+    return (
+      <div style={logoContainer}>
+        <div style={textWrapper}>
+          <img src={dashAnim} style={gifSection}></img>
+          <h1 style={hello}>
+            Hello,
+          </h1>
+          <h2 style={username}>
+            {firstName} {lastName}
+          </h2>
+        </div>
+      </div>
+    )
 }
 
 export default HelloLogo

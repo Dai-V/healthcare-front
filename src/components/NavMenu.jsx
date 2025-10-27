@@ -117,69 +117,118 @@ const NavMenu = ({ role, activeView, onViewChange }) => {
             onViewChange(view);
         }
     };
+    if (role == 'doctor')
+        return (
+            <div style={styles.container}>
+                <div style={{ position: 'relative' }}>
+                    <button
+                        style={{
+                            ...styles.menuItem,
+                            ...(activeView === 'Appointments' ? styles.activeItem : {}),
+                        }}
+                        onClick={() => handleMenuClick('Appointments')}
+                    >
+                        Appointments
+                    </button>
+                </div>
 
-    return (
-        <div style={styles.container}>
-            <div style={{ position: 'relative' }}>
                 <button
                     style={{
                         ...styles.menuItem,
-                        ...(activeView === 'Appointments' ? styles.activeItem : {}),
+                        ...(activeView === 'Profile' ? styles.activeItem : {}),
                     }}
-                    onClick={() => handleMenuClick('Appointments')}
+                    onClick={() => handleMenuClick('Profile')}
                 >
-                    Appointments
+                    Profile
                 </button>
-            </div>
 
-            <div style={{ position: 'relative' }}>
+                <div style={styles.searchContainer}>
+                    <input
+                        type="text"
+                        placeholder="Search..."
+                        value={searchValue}
+                        onChange={(e) => setSearchValue(e.target.value)}
+                        style={styles.searchInput}
+                    />
+                    <button
+                        style={styles.searchButton}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.transform = 'translateY(-50%) scale(1.05)';
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.transform = 'translateY(-50%) scale(1)';
+                        }}
+                    >
+                        <svg style={styles.searchIcon} viewBox="0 0 24 24">
+                            <circle cx="11" cy="11" r="8" />
+                            <path d="M21 21l-4.35-4.35" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        );
+    else
+        return (
+            <div style={styles.container}>
+                <div style={{ position: 'relative' }}>
+                    <button
+                        style={{
+                            ...styles.menuItem,
+                            ...(activeView === 'Appointments' ? styles.activeItem : {}),
+                        }}
+                        onClick={() => handleMenuClick('Appointments')}
+                    >
+                        Appointments
+                    </button>
+                </div>
+                <div style={{ position: 'relative' }}>
+                    <button
+                        style={{
+                            ...styles.menuItem,
+                            ...(activeView === 'Requests' ? styles.activeItem : {}),
+                        }}
+                        onClick={() => handleMenuClick('Requests')}
+                    >
+                        Requests
+                    </button>
+                    {/* <div style={styles.badge}>0</div> */}
+                </div>
+
                 <button
                     style={{
                         ...styles.menuItem,
-                        ...(activeView === 'Requests' ? styles.activeItem : {}),
+                        ...(activeView === 'Profile' ? styles.activeItem : {}),
                     }}
-                    onClick={() => handleMenuClick('Requests')}
+                    onClick={() => handleMenuClick('Profile')}
                 >
-                    Requests
+                    Profile
                 </button>
-                {/* <div style={styles.badge}>0</div> */}
-            </div>
 
-            <button
-                style={{
-                    ...styles.menuItem,
-                    ...(activeView === 'Profile' ? styles.activeItem : {}),
-                }}
-                onClick={() => handleMenuClick('Profile')}
-            >
-                Profile
-            </button>
-
-            <div style={styles.searchContainer}>
-                <input
-                    type="text"
-                    placeholder="Search..."
-                    value={searchValue}
-                    onChange={(e) => setSearchValue(e.target.value)}
-                    style={styles.searchInput}
-                />
-                <button
-                    style={styles.searchButton}
-                    onMouseEnter={(e) => {
-                        e.currentTarget.style.transform = 'translateY(-50%) scale(1.05)';
-                    }}
-                    onMouseLeave={(e) => {
-                        e.currentTarget.style.transform = 'translateY(-50%) scale(1)';
-                    }}
-                >
-                    <svg style={styles.searchIcon} viewBox="0 0 24 24">
-                        <circle cx="11" cy="11" r="8" />
-                        <path d="M21 21l-4.35-4.35" />
-                    </svg>
-                </button>
+                <div style={styles.searchContainer}>
+                    <input
+                        type="text"
+                        placeholder="Search..."
+                        value={searchValue}
+                        onChange={(e) => setSearchValue(e.target.value)}
+                        style={styles.searchInput}
+                    />
+                    <button
+                        style={styles.searchButton}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.transform = 'translateY(-50%) scale(1.05)';
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.transform = 'translateY(-50%) scale(1)';
+                        }}
+                    >
+                        <svg style={styles.searchIcon} viewBox="0 0 24 24">
+                            <circle cx="11" cy="11" r="8" />
+                            <path d="M21 21l-4.35-4.35" />
+                        </svg>
+                    </button>
+                </div>
             </div>
-        </div>
-    );
+        );
 };
 
 export default NavMenu;

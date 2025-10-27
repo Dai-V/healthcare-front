@@ -113,7 +113,7 @@ const styles = {
         fontWeight: '500',
         color: '#4169E1',
     },
-    appointmentDoctor: {
+    appointmentPatient: {
         fontSize: '1rem',
         fontWeight: '500',
         color: '#4169E1',
@@ -121,13 +121,13 @@ const styles = {
 
 };
 
-const UserProfile = () => {
+const DoctorProfile = () => {
     const [userInfo, setUserInfo] = useState({
         firstName: '',
         lastName: '',
         email: '',
-        phone: '',
-        dob: '',
+        specialty: '',
+        role: '',
     });
     const [appointments, setAppointments] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -153,9 +153,9 @@ const UserProfile = () => {
 
                 const userData = await userResponse.json();
 
-                // Fetch patient info
-                const patientResponse = await fetch(
-                    import.meta.env.VITE_BACKEND + 'api/patients/' + userId,
+                // Fetch doctor info
+                const doctorResponse = await fetch(
+                    import.meta.env.VITE_BACKEND + 'api/doctors/' + userId,
                     {
                         method: 'GET',
                         headers: {
@@ -164,18 +164,17 @@ const UserProfile = () => {
                     }
                 );
 
-                if (!patientResponse.ok) {
-                    throw new Error(`HTTP error! status: ${patientResponse.status}`);
+                if (!doctorResponse.ok) {
+                    throw new Error(`HTTP error! status: ${doctorResponse.status}`);
                 }
 
-                const patientData = await patientResponse.json();
+                const doctorData = await doctorResponse.json();
 
                 setUserInfo({
                     firstName: userData.firstName || '',
                     lastName: userData.lastName || '',
                     email: userData.email || '',
-                    phone: patientData.phoneNumber || '',
-                    dob: patientData.dateOfBirth || '',
+                    specialty: doctorData.specialty || '',
                     role: userData.role.toLowerCase() || '',
                 });
 
@@ -196,18 +195,18 @@ const UserProfile = () => {
 
                 const appointmentsData = await appointmentsResponse.json();
 
-                // Filter appointments for this patient that are in the past
+                // Filter appointments for this doctor that are in the past
                 const now = new Date();
                 const pastAppointments = appointmentsData.filter(apt =>
-                    apt.patientUserId === userId && new Date(apt.scheduledStart) < now
+                    apt.doctorUserId === userId && new Date(apt.scheduledStart) < now
                 );
 
-                // Fetch doctor details for each appointment
-                const appointmentsWithDoctors = await Promise.all(
+                // Fetch patient details for each appointment
+                const appointmentsWithPatients = await Promise.all(
                     pastAppointments.map(async (apt) => {
                         try {
-                            const doctorResponse = await fetch(
-                                import.meta.env.VITE_BACKEND + 'api/users/' + apt.doctorUserId,
+                            const patientResponse = await fetch(
+                                import.meta.env.VITE_BACKEND + 'api/users/' + apt.patientUserId,
                                 {
                                     method: 'GET',
                                     headers: {
@@ -216,29 +215,29 @@ const UserProfile = () => {
                                 }
                             );
 
-                            if (doctorResponse.ok) {
-                                const doctorData = await doctorResponse.json();
+                            if (patientResponse.ok) {
+                                const patientData = await patientResponse.json();
                                 return {
                                     ...apt,
-                                    doctorName: `Dr. ${doctorData.firstName} ${doctorData.lastName}`,
+                                    patientName: `${patientData.firstName} ${patientData.lastName}`,
                                 };
                             }
-                            return { ...apt, doctorName: 'Unknown Doctor' };
+                            return { ...apt, patientName: 'Unknown Patient' };
                         } catch (error) {
-                            console.error('Error fetching doctor info:', error);
-                            return { ...apt, doctorName: 'Unknown Doctor' };
+                            console.error('Error fetching patient info:', error);
+                            return { ...apt, patientName: 'Unknown Patient' };
                         }
                     })
                 );
 
                 // Sort by date (most recent first)
-                appointmentsWithDoctors.sort((a, b) =>
+                appointmentsWithPatients.sort((a, b) =>
                     new Date(b.scheduledStart) - new Date(a.scheduledStart)
                 );
 
-                setAppointments(appointmentsWithDoctors);
+                setAppointments(appointmentsWithPatients);
                 setLoading(false);
-                console.log('User info loaded:', { userData, patientData, appointments: appointmentsWithDoctors });
+                console.log('User info loaded:', { userData, doctorData, appointments: appointmentsWithPatients });
             } catch (error) {
                 console.error('Error fetching user info:', error);
                 setLoading(false);
@@ -258,12 +257,10 @@ const UserProfile = () => {
                 <>
                     {/* Header Section */}
                     <div style={styles.headerSection}>
-                        <h1 style={styles.username}>User Profile</h1>
+                        <h1 style={styles.username}>Doctor Profile</h1>
                     </div>
 
                     {/* My Info Section */}
-
-
                     <div style={styles.infoCard}>
                         <div style={styles.myInfoHeader}>
                             My Info <Edit size={20} style={styles.editIcon} />
@@ -273,26 +270,19 @@ const UserProfile = () => {
                                 <span style={styles.infoLabel}>First Name:</span>
                                 <span style={styles.infoValue}>{userInfo.firstName}</span>
                             </div>
-                            <div style={styles.infoItem}>
-                                <span style={styles.infoLabel}>Email:</span>
-                                <span style={styles.infoValue}>{userInfo.email}</span>
-                            </div>
+
 
                             <div style={styles.infoItem}>
                                 <span style={styles.infoLabel}>Last Name:</span>
                                 <span style={styles.infoValue}>{userInfo.lastName}</span>
                             </div>
                             <div style={styles.infoItem}>
-                                <span style={styles.infoLabel}>Phone Number:</span>
-                                <span style={styles.infoValue}>{userInfo.phone || 'Not provided'}</span>
+                                <span style={styles.infoLabel}>Email:</span>
+                                <span style={styles.infoValue}>{userInfo.email}</span>
                             </div>
                             <div style={styles.infoItem}>
-                                <span style={styles.infoLabel}>DOB:</span>
-                                <span style={styles.infoValue}>{userInfo.dob || 'Not provided'}</span>
-                            </div>
-                            <div style={styles.infoItem}>
-                                <span style={styles.infoLabel}>Role:</span>
-                                <span style={styles.infoValue}>{userInfo.role || 'Not provided'}</span>
+                                <span style={styles.infoLabel}>Specialty:</span>
+                                <span style={styles.infoValue}>{userInfo.specialty || 'Not provided'}</span>
                             </div>
                         </div>
                     </div>
@@ -325,7 +315,7 @@ const UserProfile = () => {
                                         <span style={styles.appointmentDate}>
                                             {dateStr} | {timeStr}
                                         </span>
-                                        <span style={styles.appointmentDoctor}>{apt.doctorName}</span>
+                                        <span style={styles.appointmentPatient}>{apt.patientName}</span>
                                     </div>
                                 );
                             })
@@ -337,4 +327,4 @@ const UserProfile = () => {
     );
 };
 
-export default UserProfile;
+export default DoctorProfile;
