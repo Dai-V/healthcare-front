@@ -5,19 +5,11 @@ import secureLocalStorage from 'react-secure-storage';
 const styles = {
     container: {
         width: '100%',
-        height: '100%',
         overflow: 'auto',
         backgroundColor: '#F6FAFF',
         padding: '1rem',
-        borderRadius: '24px'
-    },
+        borderRadius: '24px',
 
-    contentWrapper: {
-        backgroundColor: 'white',
-        borderRadius: '1.5rem',
-        padding: '2rem',
-        margin: '0 auto',
-        maxWidth: '1200px',
     },
     headerSection: {
         display: 'flex',
@@ -65,8 +57,9 @@ const styles = {
     },
     infoGrid: {
         display: 'grid',
-        gridTemplateColumns: 'repeat(3, 1fr)',
+        gridTemplateColumns: 'repeat(2, 1fr)',
         gap: '1.5rem',
+
     },
     infoItem: {
         display: 'flex',
@@ -82,42 +75,8 @@ const styles = {
         fontSize: '0.95rem',
         color: '#666',
     },
-    historyHeader: {
-        fontSize: '1.25rem',
-        fontWeight: '600',
-        color: '#4169E1',
-        marginBottom: '1rem',
-    },
-    historyCard: {
-        backgroundColor: '#F5F5FA',
-        borderRadius: '1.5rem',
-        padding: '1.5rem',
-    },
-    appointmentRow: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: '1rem 1.5rem',
-        marginBottom: '0.5rem',
-        borderRadius: '1.5rem',
-        transition: 'all 0.2s ease',
-    },
-    appointmentRowPurple: {
-        backgroundColor: '#E8E8F5',
-    },
-    appointmentRowWhite: {
-        backgroundColor: 'white',
-    },
-    appointmentDate: {
-        fontSize: '1rem',
-        fontWeight: '500',
-        color: '#4169E1',
-    },
-    appointmentDoctor: {
-        fontSize: '1rem',
-        fontWeight: '500',
-        color: '#4169E1',
-    },
+
+
 
 };
 
