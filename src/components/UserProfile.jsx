@@ -258,7 +258,7 @@ const UserProfile = () => {
                 <>
                     {/* Header Section */}
                     <div style={styles.headerSection}>
-                        <h1 style={styles.username}>User Profile</h1>
+                        <h1 style={styles.username}>Your Profile</h1>
                     </div>
 
                     {/* My Info Section */}

@@ -257,7 +257,7 @@ const DoctorProfile = () => {
                 <>
                     {/* Header Section */}
                     <div style={styles.headerSection}>
-                        <h1 style={styles.username}>Doctor Profile</h1>
+                        <h1 style={styles.username}>Your Profile</h1>
                     </div>
 
                     {/* My Info Section */}

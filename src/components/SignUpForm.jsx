@@ -219,8 +219,8 @@ const SignUpForm = () => {
         <form onSubmit={handleSubmit} style={formContainerStyle}>
           <div style={gridContainerStyle}>
             <div style={columnStyle}>
-              <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="Last Name" style={inputStyle} />
               <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="First Name" style={inputStyle} />
+              <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="Last Name" style={inputStyle} />
               <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" style={inputStyle} />
               <input
                 type="date"
@@ -246,11 +246,11 @@ const SignUpForm = () => {
                 maxLength="12"
               />
 
-              <select value={sex} onChange={(e) => setSex(e.target.value)} style={{ ...inputStyle, cursor: 'pointer', fontWeight: '500' }}>
+              <select value={sex} onChange={(e) => setSex(e.target.value)} style={{ ...inputStyle, cursor: 'pointer', fontWeight: '500', appearance: 'none', WebkitAppearance: 'none', MozAppearance: 'none', backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%233A5FCF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 15px center', backgroundSize: '20px' }}>
                 <option value="" disabled hidden>Select Sex</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="other">Other</option>
+                <option value="male" style={{ backgroundColor: '#FFFFFF', color: '#3A5FCF', padding: '10px' }}>Male</option>
+                <option value="female" style={{ backgroundColor: '#FFFFFF', color: '#3A5FCF', padding: '10px' }}>Female</option>
+                <option value="other" style={{ backgroundColor: '#FFFFFF', color: '#3A5FCF', padding: '10px' }}>Other</option>
               </select>
 
               <div style={passwordContainerStyle}>
