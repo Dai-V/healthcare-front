@@ -6,6 +6,7 @@ import LoginLogo from '../components/LoginLogo';
 import NavMenu from '../components/NavMenu';
 import PatientAppointment from '../components/PatientAppointment.jsx';
 import UserProfile from '../components/UserProfile.jsx';
+import PatientRequest from '../components/PatientRequest.jsx';
 // import AppointmentRequests from '../components/AppointmentRequests.jsx'; // Create this component
 
 function DashboardPatientPage() {
@@ -115,13 +116,13 @@ function DashboardPatientPage() {
     const renderMainContent = () => {
         switch (activeView) {
             case 'Appointments':
-                return <PatientAppointment selectedDate={selectedDate} />;
+                return <PatientAppointment selectedDate={selectedDate} />
             case 'Profile':
-                return <UserProfile />;
+                return <UserProfile />
             case 'Requests':
-                return <div>AppointmentRequests Component Coming Soon...</div>;
+                return <PatientRequest />
             default:
-                return <PatientAppointment selectedDate={selectedDate} />;
+                return <PatientAppointment selectedDate={selectedDate} />
         }
     };
 
