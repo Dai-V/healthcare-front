@@ -23,6 +23,7 @@ const Calendar = ({ onDateSelect }) => {  // Add this prop
       0 6px 12px rgba(0, 0, 0, 0.3),
       0 12px 28px rgba(0, 0, 0, 0.25)
   `,
+    margin: '10px auto',
   };
 
   const headerStyle = {

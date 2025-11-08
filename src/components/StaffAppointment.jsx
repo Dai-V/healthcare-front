@@ -1,7 +1,25 @@
 import { Clock, User } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
-const timeSlots = [
+
+function StaffAppointment({ selectedDate }) {
+    const [appointments, setAppointments] = useState([]);
+    const [doctors, setDoctors] = useState([]);
+    const [patients, setPatients] = useState({});
+    const [hoveredKey, setHoveredKey] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    const dateToUse = selectedDate || new Date();
+
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth < 768);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    const timeSlots = [
     '9.00 AM',
     '10.00 AM',
     '11.00 AM',
@@ -15,7 +33,8 @@ const styles = {
     card: {
         backgroundColor: '#F6FAFF',
         borderRadius: '2rem',
-        padding: '1rem 2rem 1rem 2rem',
+        //padding: '1rem 2rem 1rem 2rem',
+        padding: isMobile ? '1rem' : '1rem 2rem',
         width: '100%',
         boxShadow: `
             0 6px 12px rgba(0, 0, 0, 0.3),
@@ -24,12 +43,18 @@ const styles = {
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
-        overflow: 'auto'
+        //overflow: 'auto'
+        overflowX: isMobile ? 'auto' : 'hidden',
+        overflowY: 'auto',
     },
     headerRow: {
         display: 'flex',
-        gap: '1rem',
-        position: 'sticky',
+        //gap: '1rem',
+        //position: 'sticky',
+        flexDirection: isMobile ? 'row' : 'row',
+        flexWrap: isMobile ? 'wrap' : 'nowrap',
+        gap: isMobile ? '0.5rem' : '1rem',
+        position: isMobile ? 'relative' : 'sticky',
         top: 0,
         backgroundColor: '#F6FAFF',
         zIndex: 10,
@@ -47,11 +72,13 @@ const styles = {
     },
     doctorHeader: {
         flex: 1,
-        minWidth: '200px',
+        minWidth: isMobile ? '100%' : '200px',
+        //minWidth: '200px',
         backgroundColor: '#5c6bc0',
         color: 'white',
         padding: '1rem',
-        borderRadius: '1.5rem',
+        //borderRadius: '1.5rem',
+        borderRadius: isMobile ? '1rem' : '1.5rem',
         fontWeight: '600',
         fontSize: '1.1rem',
         textAlign: 'center',
@@ -61,22 +88,28 @@ const styles = {
         display: 'flex',
         gap: '1rem',
         marginBottom: '1rem',
-        alignItems: 'stretch'
+        //alignItems: 'stretch',
+        alignItems: isMobile ? 'stretch' : 'center',
+        flexDirection: isMobile ? 'row' : 'row',
+        flexWrap: isMobile ? 'wrap' : 'nowrap',
     },
     timeSlot: {
         backgroundColor: 'white',
         padding: '0.75rem 1rem',
         borderRadius: '1.5rem',
         display: 'flex',
-        alignItems: 'center',
+        //alignItems: 'center',
         justifyContent: 'center',
-        gap: '0.5rem',
+        //gap: '0.5rem',
         boxShadow: `
             0 6px 14px rgba(0, 0, 0, 0.22),
             0 12px 28px rgba(0, 0, 0, 0.18)
         `,
         minWidth: '140px',
         width: '140px',
+        flexDirection: isMobile ? 'column' : 'row',
+        alignItems: isMobile ? 'stretch' : 'center',
+        gap: isMobile ? '0.5rem' : '1rem',
     },
     timeText: {
         color: '#5c6bc0',
@@ -138,15 +171,6 @@ const styles = {
         padding: '2rem'
     }
 };
-
-function StaffAppointment({ selectedDate }) {
-    const [appointments, setAppointments] = useState([]);
-    const [doctors, setDoctors] = useState([]);
-    const [patients, setPatients] = useState({});
-    const [hoveredKey, setHoveredKey] = useState(null);
-    const [loading, setLoading] = useState(true);
-
-    const dateToUse = selectedDate || new Date();
 
     // Function to check if two dates are the same day
     const isSameDay = (date1, date2) => {
@@ -215,6 +239,7 @@ function StaffAppointment({ selectedDate }) {
         const startTime = formatTime(appointment.scheduledStart);
         const endTime = formatTime(appointment.scheduledEnd);
         const patientName = getPatientName(appointment.patientUserId);
+     
 
         alert(
             `Appointment Details:\n` +

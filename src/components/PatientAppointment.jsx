@@ -25,7 +25,7 @@ const styles = {
         `,
         display: 'flex',
         flexDirection: 'column',
-        height: '100%'
+        height: '100%',
     },
     appointmentRow: {
         display: 'flex',

@@ -41,17 +41,22 @@ function HelloLogo() {
     position: 'relative',
     margin: 'auto',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     padding: '10px',
     width: '100%',
     height: 'auto',
+    flexWrap: 'wrap',
+    gap: '1rem',
   }
   const gifSection = {
-    position: 'absolute',
+    //position: 'absolute',
     zIndex: '11',
-    width: '15%',
-    marginTop: '-4%',
-    marginLeft: '46%'
+    width: 'clamp(40px, 6vw, 70px)',
+    //width: '15%',
+    marginTop: '0.2rem',
+    //marginLeft: '46%',
+    height: 'auto',
+    flexShrink: 0, 
 
   }
 
@@ -61,12 +66,14 @@ function HelloLogo() {
   }
 
   const hello = {
-    fontSize: '3rem',
+    //fontSize: '3rem',
+    fontSize: 'clamp(1.7rem, 2.5vw, 2.5rem)',
     fontWeight: 'bold',
     color: '#3A5FCF',
   }
   const username = {
-    fontSize: '3rem',
+    //fontSize: '3rem',
+    fontSize: 'clamp(1.5rem, 2vw, 2rem)',
     fontWeight: 'bold',
     color: '#3A5FCF',
     overflow: 'hidden',
