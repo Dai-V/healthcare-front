@@ -32,7 +32,7 @@ const styles = {
         flexDirection: 'column',
         gap: '1rem',
         overflowY: 'auto',
-        flex: 1,
+        maxHeight: 'calc(3 * (1rem + 4.5rem))', // 3 cards + gaps
     },
     sectionTitle: {
         fontSize: '1.25rem',
@@ -193,6 +193,7 @@ const PatientRequest = () => {
                 const aptDate = new Date(apt.preferredDate);
 
                 return {
+                    id: apt.id,
                     date: aptDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
                     doctor: `Dr. ${doctorName}`,
                     reason: apt.reason,
@@ -201,8 +202,12 @@ const PatientRequest = () => {
             });
 
             // Separate into current and past
-            const current = mappedAppointments.filter(apt => apt.rawDate >= today);
-            const past = mappedAppointments.filter(apt => apt.rawDate < today);
+            const current = mappedAppointments
+                .filter(apt => apt.rawDate >= today)
+                .sort((a, b) => b.id - a.id); // Sort by ID descending (newest first)
+            const past = mappedAppointments
+                .filter(apt => apt.rawDate < today)
+                .sort((a, b) => b.id - a.id); // Sort by ID descending (newest first)
 
             setCurrentRequests(current);
             setPastAppointments(past);

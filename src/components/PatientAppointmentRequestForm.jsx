@@ -253,6 +253,9 @@ const PatientAppointmentRequestForm = ({ onClose, onSubmit, onSuccess }) => {
     };
 
     const handleClearDoctor = () => {
+        setSelectedDoctor(null);
+        setFormData(prev => ({ ...prev, doctorId: null }));
+        setSearchTerm('');
         setShowDropdown(true);
     };
 
