@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
-import { X } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
+import { X, Search } from 'lucide-react';
+import secureLocalStorage from 'react-secure-storage';
+
 
 const styles = {
     overlay: {
@@ -20,6 +23,8 @@ const styles = {
         padding: '2.5rem',
         width: '90%',
         maxWidth: '400px',
+        maxHeight: '90vh',
+        overflowY: 'auto',
         position: 'relative',
         boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1)',
     },
@@ -63,6 +68,68 @@ const styles = {
         outline: 'none',
         boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)',
     },
+    searchInputWrapper: {
+        position: 'relative',
+        width: '100%',
+    },
+    searchIcon: {
+        position: 'absolute',
+        left: '1rem',
+        top: '50%',
+        transform: 'translateY(-50%)',
+        color: '#4169E1',
+        pointerEvents: 'none',
+    },
+    searchInput: {
+        width: '100%',
+        padding: '0.75rem 1rem 0.75rem 2.75rem',
+        borderRadius: '1.5rem',
+        border: 'none',
+        backgroundColor: 'white',
+        fontSize: '1rem',
+        outline: 'none',
+        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)',
+    },
+    doctorList: {
+        maxHeight: '200px',
+        overflowY: 'auto',
+        backgroundColor: 'white',
+        borderRadius: '1rem',
+        marginTop: '0.5rem',
+        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)',
+    },
+    doctorItem: {
+        padding: '0.75rem 1rem',
+        cursor: 'pointer',
+        borderBottom: '1px solid #E6D5F5',
+        transition: 'background-color 0.2s',
+    },
+    doctorItemHover: {
+        backgroundColor: '#F3E8FF',
+    },
+    doctorName: {
+        fontWeight: 600,
+        color: '#4169E1',
+        fontSize: '1rem',
+    },
+    doctorSpecialty: {
+        fontSize: '0.875rem',
+        color: '#6B7280',
+        marginTop: '0.25rem',
+    },
+    textarea: {
+        width: '100%',
+        padding: '0.75rem 1rem',
+        borderRadius: '1.5rem',
+        border: 'none',
+        backgroundColor: 'white',
+        fontSize: '1rem',
+        outline: 'none',
+        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)',
+        minHeight: '100px',
+        resize: 'vertical',
+        fontFamily: 'inherit',
+    },
     submitButton: {
         width: '100%',
         backgroundColor: 'white',
@@ -77,14 +144,117 @@ const styles = {
         transition: 'all 0.3s',
         boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
     },
+    selectedDoctor: {
+        backgroundColor: 'white',
+        padding: '0.75rem 1rem',
+        borderRadius: '1.5rem',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    clearButton: {
+        backgroundColor: 'transparent',
+        border: 'none',
+        color: '#4169E1',
+        cursor: 'pointer',
+        padding: '0.25rem',
+        fontSize: '0.875rem',
+        fontWeight: 600,
+    },
+    loading: {
+        textAlign: 'center',
+        padding: '1rem',
+        color: '#4169E1',
+    },
+    error: {
+        textAlign: 'center',
+        padding: '1rem',
+        color: '#DC2626',
+        fontSize: '0.875rem',
+    },
 };
 
-const PatientAppointmentRequestForm = ({ onClose, onSubmit }) => {
+const PatientAppointmentRequestForm = ({ onClose, onSubmit, onSuccess }) => {
     const [formData, setFormData] = useState({
-        doctor: '',
+        doctorId: null,
         date: '',
-        time: '',
+        note: '',
     });
+
+    const [doctors, setDoctors] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [selectedDoctor, setSelectedDoctor] = useState(null);
+    const [showDropdown, setShowDropdown] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [hoveredItem, setHoveredItem] = useState(null);
+
+    // Get today's date in YYYY-MM-DD format
+    const today = new Date().toISOString().split('T')[0];
+
+    useEffect(() => {
+        document.body.style.overflow = 'hidden';
+        fetchDoctors();
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, []);
+
+    const fetchDoctors = async () => {
+        try {
+            setLoading(true);
+            setError(null);
+
+            // Fetch users and doctors
+            const [usersResponse, doctorsResponse] = await Promise.all([
+                fetch(import.meta.env.VITE_BACKEND + 'api/users'),
+                fetch(import.meta.env.VITE_BACKEND + 'api/doctors')
+            ]);
+
+            if (!usersResponse.ok || !doctorsResponse.ok) {
+                throw new Error('Failed to fetch data');
+            }
+
+            const users = await usersResponse.json();
+            const doctorsData = await doctorsResponse.json();
+
+            // Filter users with role "doctor" and join with doctors data
+            const doctorUsers = users.filter(user => user.role === 'doctor');
+            const combinedDoctors = doctorUsers.map(user => {
+                const doctorInfo = doctorsData.find(doc => doc.id === user.id);
+                return {
+                    id: user.id,
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    email: user.email,
+                    specialty: doctorInfo?.specialty || 'General Practice'
+                };
+            });
+
+            setDoctors(combinedDoctors);
+            setLoading(false);
+        } catch (err) {
+            setError('Failed to load doctors. Please try again.');
+            setLoading(false);
+        }
+    };
+
+    const filteredDoctors = doctors.filter(doctor => {
+        const fullName = `${doctor.firstName} ${doctor.lastName}`.toLowerCase();
+        const search = searchTerm.toLowerCase();
+        return fullName.includes(search) || doctor.specialty.toLowerCase().includes(search);
+    });
+
+    const handleDoctorSelect = (doctor) => {
+        setSelectedDoctor(doctor);
+        setFormData(prev => ({ ...prev, doctorId: doctor.id }));
+        setSearchTerm('');
+        setShowDropdown(false);
+    };
+
+    const handleClearDoctor = () => {
+        setShowDropdown(true);
+    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -94,10 +264,58 @@ const PatientAppointmentRequestForm = ({ onClose, onSubmit }) => {
         }));
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        onSubmit(formData);
-        onClose();
+
+    const handleSubmit = async () => {
+        if (formData.doctorId && formData.date && formData.note) {
+            try {
+                // Get patient ID from secure local storage
+                const patientId = secureLocalStorage.getItem("id");
+
+                if (!patientId) {
+                    alert('User not logged in');
+                    return;
+                }
+
+                // Send POST request to create appointment request
+                const response = await fetch(import.meta.env.VITE_BACKEND + 'api/appointment-requests', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        patientId: patientId,
+                        doctorId: formData.doctorId,
+                        preferredDate: formData.date,
+                        reason: formData.note
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to create appointment request');
+                }
+
+                const result = await response.json();
+
+                // Call onSubmit callback with result data
+                if (onSubmit) {
+                    onSubmit({
+                        ...result,
+                        doctorName: `${selectedDoctor.firstName} ${selectedDoctor.lastName}`,
+                        specialty: selectedDoctor.specialty,
+                    });
+                }
+
+                // Call onSuccess to refresh the parent component
+                if (onSuccess) {
+                    onSuccess();
+                }
+
+                onClose();
+            } catch (err) {
+                alert('Failed to submit appointment request. Please try again.');
+                console.error('Error submitting appointment:', err);
+            }
+        }
     };
 
     const handleButtonHover = (e) => {
@@ -116,7 +334,7 @@ const PatientAppointmentRequestForm = ({ onClose, onSubmit }) => {
         }
     };
 
-    return (
+    return createPortal(
         <div style={styles.overlay} onClick={handleOverlayClick}>
             <div style={styles.modal}>
                 <button style={styles.closeButton} onClick={onClose}>
@@ -125,17 +343,70 @@ const PatientAppointmentRequestForm = ({ onClose, onSubmit }) => {
 
                 <h2 style={styles.title}>Submission Form</h2>
 
-                <form onSubmit={handleSubmit}>
+                <div>
                     <div style={styles.formGroup}>
                         <label style={styles.label}>Doctor:</label>
-                        <input
-                            type="text"
-                            name="doctor"
-                            value={formData.doctor}
-                            onChange={handleChange}
-                            style={styles.input}
-                            required
-                        />
+                        {selectedDoctor ? (
+                            <div style={styles.selectedDoctor}>
+                                <div>
+                                    <div style={styles.doctorName}>
+                                        Dr. {selectedDoctor.firstName} {selectedDoctor.lastName}
+                                    </div>
+                                    <div style={styles.doctorSpecialty}>
+                                        {selectedDoctor.specialty}
+                                    </div>
+                                </div>
+                                <button style={styles.clearButton} onClick={handleClearDoctor}>
+                                    Change
+                                </button>
+                            </div>
+                        ) : (
+                            <>
+                                <div style={styles.searchInputWrapper}>
+                                    <Search size={20} style={styles.searchIcon} />
+                                    <input
+                                        type="text"
+                                        value={searchTerm}
+                                        onChange={(e) => {
+                                            setSearchTerm(e.target.value);
+                                            setShowDropdown(true);
+                                        }}
+                                        onFocus={() => setShowDropdown(true)}
+                                        style={styles.searchInput}
+                                        placeholder="Search by name or specialty..."
+                                        required
+                                    />
+                                </div>
+                                {showDropdown && (
+                                    <div style={styles.doctorList}>
+                                        {loading && <div style={styles.loading}>Loading doctors...</div>}
+                                        {error && <div style={styles.error}>{error}</div>}
+                                        {!loading && !error && filteredDoctors.length === 0 && (
+                                            <div style={styles.loading}>No doctors found</div>
+                                        )}
+                                        {!loading && !error && filteredDoctors.map(doctor => (
+                                            <div
+                                                key={doctor.id}
+                                                style={{
+                                                    ...styles.doctorItem,
+                                                    ...(hoveredItem === doctor.id ? styles.doctorItemHover : {})
+                                                }}
+                                                onClick={() => handleDoctorSelect(doctor)}
+                                                onMouseEnter={() => setHoveredItem(doctor.id)}
+                                                onMouseLeave={() => setHoveredItem(null)}
+                                            >
+                                                <div style={styles.doctorName}>
+                                                    Dr. {doctor.firstName} {doctor.lastName}
+                                                </div>
+                                                <div style={styles.doctorSpecialty}>
+                                                    {doctor.specialty}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </>
+                        )}
                     </div>
 
                     <div style={styles.formGroup}>
@@ -145,34 +416,37 @@ const PatientAppointmentRequestForm = ({ onClose, onSubmit }) => {
                             name="date"
                             value={formData.date}
                             onChange={handleChange}
+                            min={today}
                             style={styles.input}
                             required
                         />
                     </div>
 
                     <div style={styles.formGroup}>
-                        <label style={styles.label}>Time:</label>
-                        <input
-                            type="time"
-                            name="time"
-                            value={formData.time}
+                        <label style={styles.label}>Note/Reason:</label>
+                        <textarea
+                            name="note"
+                            value={formData.note}
                             onChange={handleChange}
-                            style={styles.input}
+                            style={styles.textarea}
+                            placeholder="Please describe the reason for your appointment..."
                             required
                         />
                     </div>
 
                     <button
-                        type="submit"
+                        type="button"
                         style={styles.submitButton}
+                        onClick={handleSubmit}
                         onMouseEnter={handleButtonHover}
                         onMouseLeave={handleButtonLeave}
                     >
                         Submit
                     </button>
-                </form>
+                </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 };
 

@@ -147,73 +147,73 @@ const PatientRequest = () => {
     const [error, setError] = useState(null);
     const [showForm, setShowForm] = useState(false);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                setLoading(true);
+    const fetchData = async () => {
+        try {
+            setLoading(true);
 
-                // Get current logged in patient ID
-                const currentPatientId = secureLocalStorage.getItem("id");
+            // Get current logged in patient ID
+            const currentPatientId = secureLocalStorage.getItem("id");
 
-                if (!currentPatientId) {
-                    throw new Error('User not logged in');
-                }
-
-                // Fetch both APIs in parallel
-                const [appointmentsRes, usersRes] = await Promise.all([
-                    fetch(import.meta.env.VITE_BACKEND + 'api/appointment-requests'),
-                    fetch(import.meta.env.VITE_BACKEND + 'api/users')
-                ]);
-
-                if (!appointmentsRes.ok || !usersRes.ok) {
-                    throw new Error('Failed to fetch data');
-                }
-
-                const appointments = await appointmentsRes.json();
-                const users = await usersRes.json();
-
-                // Filter appointments for current patient only
-                const patientAppointments = appointments.filter(
-                    apt => apt.patientId === parseInt(currentPatientId)
-                );
-
-                // Create a map of doctorId to doctor's last name
-                const doctorMap = {};
-                users.forEach(user => {
-                    if (user.role === 'doctor') {
-                        doctorMap[user.id] = user.lastName;
-                    }
-                });
-
-                // Map appointments with doctor names
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
-
-                const mappedAppointments = patientAppointments.map(apt => {
-                    const doctorName = doctorMap[apt.doctorId] || 'Unknown Doctor';
-                    const aptDate = new Date(apt.preferredDate);
-
-                    return {
-                        date: aptDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-                        doctor: `Dr. ${doctorName}`,
-                        reason: apt.reason,
-                        rawDate: aptDate
-                    };
-                });
-
-                // Separate into current and past
-                const current = mappedAppointments.filter(apt => apt.rawDate >= today);
-                const past = mappedAppointments.filter(apt => apt.rawDate < today);
-
-                setCurrentRequests(current);
-                setPastAppointments(past);
-                setLoading(false);
-            } catch (err) {
-                setError(err.message);
-                setLoading(false);
+            if (!currentPatientId) {
+                throw new Error('User not logged in');
             }
-        };
 
+            // Fetch both APIs in parallel
+            const [appointmentsRes, usersRes] = await Promise.all([
+                fetch(import.meta.env.VITE_BACKEND + 'api/appointment-requests'),
+                fetch(import.meta.env.VITE_BACKEND + 'api/users')
+            ]);
+
+            if (!appointmentsRes.ok || !usersRes.ok) {
+                throw new Error('Failed to fetch data');
+            }
+
+            const appointments = await appointmentsRes.json();
+            const users = await usersRes.json();
+
+            // Filter appointments for current patient only
+            const patientAppointments = appointments.filter(
+                apt => apt.patientId === parseInt(currentPatientId)
+            );
+
+            // Create a map of doctorId to doctor's last name
+            const doctorMap = {};
+            users.forEach(user => {
+                if (user.role === 'doctor') {
+                    doctorMap[user.id] = user.lastName;
+                }
+            });
+
+            // Map appointments with doctor names
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            const mappedAppointments = patientAppointments.map(apt => {
+                const doctorName = doctorMap[apt.doctorId] || 'Unknown Doctor';
+                const aptDate = new Date(apt.preferredDate);
+
+                return {
+                    date: aptDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+                    doctor: `Dr. ${doctorName}`,
+                    reason: apt.reason,
+                    rawDate: aptDate
+                };
+            });
+
+            // Separate into current and past
+            const current = mappedAppointments.filter(apt => apt.rawDate >= today);
+            const past = mappedAppointments.filter(apt => apt.rawDate < today);
+
+            setCurrentRequests(current);
+            setPastAppointments(past);
+            setLoading(false);
+        } catch (err) {
+            setError(err.message);
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
         fetchData();
     }, []);
 
@@ -234,12 +234,14 @@ const PatientRequest = () => {
     };
 
     const handleFormSubmit = (formData) => {
-        console.log('Form submitted:', formData);
-        // Handle form submission logic here
+    };
+
+    const handleFormSuccess = () => {
+        // Refetch data after successful submission
+        fetchData();
     };
 
     const handleDeleteRequest = (index) => {
-        // Handle delete request logic here
         console.log('Delete request at index:', index);
     };
 
@@ -279,6 +281,7 @@ const PatientRequest = () => {
                 <PatientAppointmentRequestForm
                     onClose={handleFormClose}
                     onSubmit={handleFormSubmit}
+                    onSuccess={handleFormSuccess}
                 />
             )}
 

@@ -7,7 +7,6 @@ import NavMenu from '../components/NavMenu';
 import PatientAppointment from '../components/PatientAppointment.jsx';
 import UserProfile from '../components/UserProfile.jsx';
 import PatientRequest from '../components/PatientRequest.jsx';
-// import AppointmentRequests from '../components/AppointmentRequests.jsx'; // Create this component
 
 function DashboardPatientPage() {
     const [id, setId] = useState(secureLocalStorage.getItem("id"));
