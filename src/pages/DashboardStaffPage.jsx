@@ -6,6 +6,7 @@ import LoginLogo from '../components/LoginLogo';
 import NavMenu from '../components/NavMenu';
 import StaffAppointment from '../components/StaffAppointment.jsx';
 import StaffProfile from '../components/StaffProfile.jsx';
+import StaffRequest from '../components/StaffRequest.jsx';
 // import AppointmentRequests from '../components/AppointmentRequests.jsx'; // Create this component
 
 function DashboardStaffPage() {
@@ -13,7 +14,7 @@ function DashboardStaffPage() {
     const [role, setRole] = useState(secureLocalStorage.getItem("role"));
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [activeView, setActiveView] = useState('Appointments'); // Add this state
-    
+
 
     const [isMobile, setIsMobile] = useState(false);
 
@@ -151,7 +152,7 @@ function DashboardStaffPage() {
             case 'Profile':
                 return <StaffProfile />;
             case 'Requests':
-                return <div>AppointmentRequests Component Coming Soon...</div>;
+                return <StaffRequest />
             default:
                 return <StaffAppointment selectedDate={selectedDate} />;
         }
