@@ -12,11 +12,26 @@ const timeSlots = [
     '3.00 PM'
 ];
 
-const styles = {
+function DoctorAppointment({ selectedDate }) {
+    const [hoveredIndex, setHoveredIndex] = useState(null);
+    const [appointments, setAppointments] = useState([]);
+    const [patients, setPatients] = useState({});
+
+    const dateToUse = selectedDate || new Date();
+
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth < 768);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    const styles = {
     card: {
         backgroundColor: '#F6FAFF',
         borderRadius: '2rem',
-        padding: '2rem',
+        padding: isMobile ? '1rem' : '1rem 2rem',
         width: '100%',
         midWidth: '100px',
         boxShadow: `
@@ -24,15 +39,16 @@ const styles = {
             0 12px 28px rgba(0, 0, 0, 0.25)
         `,
         display: 'flex',
-        flexDirection: 'column',
+        flexDirection: isMobile ? 'column' : 'column',
         height: '100%'
     },
     appointmentRow: {
         display: 'flex',
-        alignItems: 'center',
+        flexDirection: isMobile ? 'column' : 'row',
+        alignItems: isMobile ? 'flex-start' : 'center',
         padding: '1rem 0',
         borderBottom: '1px solid #c5cae9',
-        gap: '1rem',
+        gap: isMobile ? '0.5rem' : '1rem',
         flex: 1
     },
     leftSection: {
@@ -42,7 +58,7 @@ const styles = {
     },
     timeSlot: {
         backgroundColor: 'white',
-        padding: '0.75rem 1.5rem',
+        padding: isMobile ? '0.5rem 1rem' : '0.75rem 1.5rem',
         borderRadius: '1.5rem',
         display: 'flex',
         alignItems: 'center',
@@ -51,13 +67,13 @@ const styles = {
             0 6px 14px rgba(0, 0, 0, 0.22),
             0 12px 28px rgba(0, 0, 0, 0.18)
         `,
-        minWidth: '140px',
+        minWidth: isMobile ? '100px' : '140px',
         flex: 1,
     },
     timeText: {
         color: '#5c6bc0',
         fontWeight: '500',
-        fontSize: '1rem'
+        fontSize: isMobile ? '0.9rem' : '1rem'
     },
     patientTag: {
         overflow: 'hidden',
@@ -67,7 +83,7 @@ const styles = {
         padding: '0.75rem 1.5rem',
         borderRadius: '1.5rem',
         fontWeight: '600',
-        fontSize: '1.125rem',
+        fontSize: isMobile ? '1rem' : '1.125rem',
         boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
         display: 'flex',
         alignItems: 'center',
@@ -87,13 +103,6 @@ const styles = {
         alignItems: 'center'
     }
 };
-
-function DoctorAppointment({ selectedDate }) {
-    const [hoveredIndex, setHoveredIndex] = useState(null);
-    const [appointments, setAppointments] = useState([]);
-    const [patients, setPatients] = useState({});
-
-    const dateToUse = selectedDate || new Date();
 
     // Function to check if two dates are the same day
     const isSameDay = (date1, date2) => {

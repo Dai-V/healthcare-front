@@ -49,7 +49,7 @@ function DashboardStaffPage() {
         overflowX: 'hidden',
         alignItems: 'stretch',
         justifyItems: 'stretch',
-        gap: isMobile ? '20px' : '40px',
+        gap: isMobile ? '0.2rem' : '0.5px',
     }
 
     const styles = {
@@ -60,7 +60,7 @@ function DashboardStaffPage() {
             //padding: '0 40px 0px',
             gridColumn: isMobile ? '1 / 2' : '1 / 2',
             gridRow: isMobile ? '1 / 2' : '1 / 2',
-            marginTop: isMobile ? '0px' : '30px',
+            marginTop: isMobile ? '0px' : '1.8rem',
             padding: isMobile ? '0' : '0 40px 0px',
             textAlign: isMobile ? 'center' : 'left',
         },
@@ -75,6 +75,7 @@ function DashboardStaffPage() {
             justifyContent: 'center',
             height: isMobile ? 'auto' : '100%',
             order: isMobile ? 3 : 'unset',
+            marginTop: isMobile ? '3rem' : '0px',
         },
         sidebar: {
             //gridColumn: '1 / 2',
@@ -86,8 +87,8 @@ function DashboardStaffPage() {
             display: 'flex',
             flexDirection: 'column',
             //justifyContent: 'space-between',
-            justifyContent: isMobile ? 'flex-start' : 'space-between',
-            gap: isMobile ? '25px' : '20px',
+            justifyContent: isMobile ? 'space-between' : 'space-between',
+            gap: isMobile ? '1rem' : '1rem',
             flex: '100%',
             //height: '100%',
             height: isMobile ? 'auto' : '100%',
@@ -103,8 +104,8 @@ function DashboardStaffPage() {
             width: '200px',
             height: '100px',
             //marginTop: '-20px'
-            marginTop: isMobile ? '10px' : '-60px',
-            marginRight: isMobile ? '20px' : '1.5rem',
+            marginTop: isMobile ? '-2.6rem' : '-2rem',
+            marginRight: isMobile ? '-0.5rem' : '1.5rem',
             transition: 'margin-top 0.3s ease-in-out',
         },
         calendar: {

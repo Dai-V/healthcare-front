@@ -38,26 +38,27 @@ function HelloLogo() {
 
   const logoContainer = {
     display: 'flex',
+    flexDirection: 'column',
     position: 'relative',
     margin: 'auto',
     alignItems: 'center',
     justifyContent: 'flex-start',
     padding: '10px',
-    width: '100%',
+    //width: '100%',
+    width: 'clamp(10w, 15vw, 20vw)',
     height: 'auto',
     flexWrap: 'wrap',
-    gap: '1rem',
+    gap: '0.5rem',
   }
   const gifSection = {
-    //position: 'absolute',
-    zIndex: '11',
-    width: 'clamp(40px, 6vw, 70px)',
+    //position: 'relative',
+    //zIndex: '11',
+    width: 'clamp(6w, 7vw, 8vw)',
     //width: '15%',
-    marginTop: '0.2rem',
-    //marginLeft: '46%',
-    height: 'auto',
-    flexShrink: 0, 
-
+    transform: 'translateY(3.4rem) translateX(6.6rem)',
+    height: 'clamp(6vh, 11vh, 14vh)',
+    //height: 'auto',
+    flexShrink: 0,
   }
 
   const textWrapper = {

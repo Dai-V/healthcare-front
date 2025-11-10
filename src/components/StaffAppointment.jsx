@@ -168,8 +168,50 @@ const styles = {
         textAlign: 'center',
         color: '#5c6bc0',
         fontSize: '1.2rem',
-        padding: '2rem'
-    }
+        padding: '2rem',
+    },
+
+    doctorCard: {
+        backgroundColor: '#F6FAFF',
+        borderRadius: '1.5rem',
+        padding: '1rem',
+        marginBottom: '1rem',
+        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+    },
+
+    doctorTitle: {
+        color: '#5c6bc0',
+        fontWeight: '700',
+        fontFamily: 'Montserrat, sans-serif',
+        fontSize: '1.2rem',
+        marginBottom: '0.75rem',
+        textAlign: 'center',
+    },
+
+    mobileSlotRow: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        backgroundColor: 'white',
+        borderRadius: '1rem',
+        padding: '0.75rem 1rem',
+        marginBottom: '0.5rem',
+        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+    },
+
+    timeLabel: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: '0.5rem',
+        color: '#5c6bc0',
+        fontWeight: '500',
+    },
+
+    patientLabel: {
+        color: '#5c6bc0',
+        fontWeight: '600',
+    textAlign: 'right',
+    },
 };
 
     // Function to check if two dates are the same day
@@ -367,7 +409,29 @@ const styles = {
 
     return (
         <div style={styles.card}>
-            {/* Header Row */}
+            {isMobile ? (
+                // MOBILE LAYOUT BELOW
+                doctors.map((doctor) => (
+                <div key={doctor.id} style={styles.doctorCard}>
+                    <h3 style={styles.doctorTitle}>Dr. {doctor.lastName}</h3>
+                        {timeSlots.map((time) => {
+                            const appointment = getAppointmentForDoctorAndSlot(doctor.id, time);
+                            const patientName = appointment ? getPatientName(appointment.patientUserId) : null;
+                        return (
+                            <div key={time} style={styles.mobileSlotRow}>
+                                <div style={styles.timeLabel}>
+                                    <Clock size={16} /> <span>{time}</span>
+                                </div>
+                                <div style={styles.patientLabel}>
+                                    {patientName ? patientName : '—'}
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+            ))
+        ) : (
+        <>
             <div style={styles.headerRow}>
                 <div style={styles.timeHeader}>Time</div>
                 {doctors.map((doctor) => (
@@ -377,7 +441,6 @@ const styles = {
                 ))}
             </div>
 
-            {/* Time Slots Rows */}
             {timeSlots.map((time, timeIndex) => (
                 <div key={timeIndex} style={styles.appointmentRow}>
                     {/* Time Column */}
@@ -430,8 +493,9 @@ const styles = {
                     })}
                 </div>
             ))}
+            </>
+        )}
         </div>
     );
 }
-
 export default StaffAppointment;

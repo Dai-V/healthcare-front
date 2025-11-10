@@ -5,8 +5,8 @@ import HelloLogo from '../components/HelloLogo';
 import LoginLogo from '../components/LoginLogo';
 import NavMenu from '../components/NavMenu';
 import PatientAppointment from '../components/PatientAppointment.jsx';
-import UserProfile from '../components/UserProfile.jsx';
 import PatientRequest from '../components/PatientRequest.jsx';
+import UserProfile from '../components/UserProfile.jsx';
 
 function DashboardPatientPage() {
     const [id, setId] = useState(secureLocalStorage.getItem("id"));
@@ -44,7 +44,7 @@ function DashboardPatientPage() {
         overflowX: 'hidden',
         alignItems: 'stretch',
         justifyItems: 'stretch',
-        gap: isMobile ? '20px' : '40px',
+        gap: isMobile ? '0.8rem' : '0.5rem',
     }
 
     const styles = {
@@ -55,7 +55,7 @@ function DashboardPatientPage() {
             //padding: '0 40px 0px',
             gridColumn: isMobile ? '1 / 2' : '1 / 2',
             gridRow: isMobile ? '1 / 2' : '1 / 2',
-            marginTop: isMobile ? '0px' : '30px',
+            marginTop: isMobile ? '0px' : '1.8rem',
             padding: isMobile ? '0' : '0 40px 0px',
             textAlign: isMobile ? 'center' : 'left',
         },
@@ -77,12 +77,12 @@ function DashboardPatientPage() {
             //padding: '0 30px 30px 30px',
             gridColumn: isMobile ? '1 / 2' : '1 / 2',
             gridRow: isMobile ? '2 / 3' : '2 / 3',
-            padding: isMobile ? '0' : '0 30px 30px 30px',
+            padding: isMobile ? '1rem' : '0 1rem 1rem 1rem',
             display: 'flex',
             flexDirection: 'column',
             //justifyContent: 'space-between',
-            justifyContent: isMobile ? 'flex-start' : 'space-between',
-            gap: isMobile ? '25px' : '20px',
+            justifyContent: isMobile ? 'space-between' : 'space-between',
+            gap: isMobile ? '1rem' : '1rem',
             flex: '100%',
             //height: '100%',
             height: isMobile ? 'auto' : '100%',
@@ -100,12 +100,10 @@ function DashboardPatientPage() {
             width: '200px',
             height: '100px',
             //marginTop: '-20px'
-            marginTop: isMobile ? '10px' : '-60px',
-            marginRight: isMobile ? '20px' : '1.5rem',
+            marginTop: isMobile ? '-2rem' : '-2rem',
+            marginRight: isMobile ? '-18rem' : '1.5rem',
             zIndex: 3,
-            position: isMobile ? 'absolute' : 'relative',
-            right: isMobile ? '0' : 'auto',
-            top: isMobile ? '10px' : 'auto',
+            //position: isMobile ? 'absolute' : 'relative',
             transition: 'margin-top 0.3s ease-in-out',
         },
         calendar: {
@@ -130,7 +128,7 @@ function DashboardPatientPage() {
         },
         mainContent: {
             borderRadius: '24px',
-            padding: '20px',
+            padding: '2rem',
             paddingBottom: '0px',
             flex: 1,
             display: 'flex',

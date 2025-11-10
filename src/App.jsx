@@ -10,13 +10,13 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path="*" element={<Dashboard />} /> 
-        {/* Pls dont delete
+        <Route path="*" element={<Dashboard />} />  
+       {/* Pls dont delete
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/dashboard/patient" element={<DashboardPatientPage />} />
         <Route path="/dashboard/doctor" element={<DashboardDoctorPage />} />
         <Route path="/dashboard/staff" element={<DashboardStaffPage />} />
-        */}
+  */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignUpPage />} />
         
