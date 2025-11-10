@@ -30,7 +30,7 @@ const styles = {
         flexDirection: 'column',
         gap: '1rem',
         overflowY: 'auto',
-        maxHeight: 'calc(7 * (1rem + 4.5rem))', // 3 cards + gaps
+        maxHeight: 'calc(6 * (1rem + 4.5rem))', // 3 cards + gaps
     },
     sectionTitle: {
         fontSize: '1.25rem',
