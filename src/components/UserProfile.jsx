@@ -65,6 +65,16 @@ const styles = {
     color: '#333',
     outline: 'none',
   },
+  inputDisabled: {
+    padding: '0.6rem 0.8rem',
+    borderRadius: '0.75rem',
+    border: '1px solid #d7d7ee',
+    background: '#E8E8E8',
+    fontSize: '0.95rem',
+    color: '#777',
+    outline: 'none',
+    cursor: 'not-allowed',
+  },
   saveBtn: {
     display: 'inline-flex',
     alignItems: 'center',
@@ -128,7 +138,8 @@ const UserProfile = () => {
     lastName: '',
     email: '',
     phone: '',
-    dob: ''
+    dob: '',
+    role: ''
   });
   const [original, setOriginal] = useState(null);
   const [editInfo, setEditInfo] = useState(null);
@@ -151,7 +162,8 @@ const UserProfile = () => {
           lastName: userData.lastName || '',
           email: userData.email || '',
           phone: patientData.phoneNumber || '',
-          dob: patientData.dateOfBirth || ''
+          dob: patientData.dateOfBirth || '',
+          role: (userData.role || '').toLowerCase()
         };
         setUserInfo(combined);
         setOriginal(combined);
@@ -309,6 +321,10 @@ const UserProfile = () => {
                   <span style={styles.infoLabel}>DOB:</span>
                   <span style={styles.infoValue}>{userInfo.dob || 'Not provided'}</span>
                 </div>
+                <div style={styles.infoItem}>
+                  <span style={styles.infoLabel}>Role:</span>
+                  <span style={styles.infoValue}>{userInfo.role || 'Not provided'}</span>
+                </div>
               </div>
             ) : (
               <div style={styles.infoGrid}>
@@ -355,6 +371,15 @@ const UserProfile = () => {
                     type="date"
                     value={editInfo.dob || ''}
                     onChange={(e) => onChange('dob', e.target.value)}
+                  />
+                </div>
+                <div style={styles.infoItem}>
+                  <label style={styles.infoLabel}>Role</label>
+                  <input
+                    style={styles.inputDisabled}
+                    type="text"
+                    value={editInfo.role}
+                    disabled
                   />
                 </div>
               </div>
