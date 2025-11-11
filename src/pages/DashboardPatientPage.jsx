@@ -7,13 +7,15 @@ import NavMenu from '../components/NavMenu';
 import PatientAppointment from '../components/PatientAppointment.jsx';
 import PatientRequest from '../components/PatientRequest.jsx';
 import UserProfile from '../components/UserProfile.jsx';
+import { useNavigate } from 'react-router-dom';
 
 function DashboardPatientPage() {
     const [id, setId] = useState(secureLocalStorage.getItem("id"));
     const [role, setRole] = useState(secureLocalStorage.getItem("role"));
     const [selectedDate, setSelectedDate] = useState(new Date());
-    const [activeView, setActiveView] = useState('Appointments'); // Add this state
+    const [activeView, setActiveView] = useState('Appointments');
     const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -34,9 +36,6 @@ function DashboardPatientPage() {
         backgroundPosition: 'center center',
         backgroundImage: 'linear-gradient(to left, #F8EDE5 30.4%, #82ABF8 88.48%)',
         display: 'grid',
-        //gridTemplateColumns: '380px minmax(0, 1fr)',
-        //gridTemplateRows: 'auto 1fr',
-        //padding: '1vw',
         gridTemplateColumns: isMobile ? '1fr' : '380px minmax(0, 1fr)',
         gridTemplateRows: isMobile ? 'auto auto auto' : 'auto 1fr',
         padding: isMobile ? '20px' : '1vw',
@@ -49,10 +48,6 @@ function DashboardPatientPage() {
 
     const styles = {
         welcomeLogo: {
-            //gridColumn: '1 / 2',
-            //gridRow: '1 / 2',
-            //marginTop: '30px',
-            //padding: '0 40px 0px',
             gridColumn: isMobile ? '1 / 2' : '1 / 2',
             gridRow: isMobile ? '1 / 2' : '1 / 2',
             marginTop: isMobile ? '0px' : '1.8rem',
@@ -60,50 +55,37 @@ function DashboardPatientPage() {
             textAlign: isMobile ? 'center' : 'left',
         },
         mainContentWrapper: {
-            //gridColumn: '2 / 3',
-            //gridRow: '2 / 3',
             gridColumn: isMobile ? '1 / 2' : '2 / 3',
             gridRow: isMobile ? '3 / 4' : '2 / 3',
             display: 'flex',
             flexDirection: 'column',
-            // height: '100%',
             height: isMobile ? 'auto' : '100%',
             order: isMobile ? 3 : 'unset',
             justifyContent: 'center',
         },
         sidebar: {
-            //gridColumn: '1 / 2',
-            //gridRow: '2 / 3',
-            //padding: '0 30px 30px 30px',
             gridColumn: isMobile ? '1 / 2' : '1 / 2',
             gridRow: isMobile ? '2 / 3' : '2 / 3',
             padding: isMobile ? '1rem' : '0 1rem 1rem 1rem',
             display: 'flex',
             flexDirection: 'column',
-            //justifyContent: 'space-between',
             justifyContent: isMobile ? 'space-between' : 'space-between',
             gap: isMobile ? '1rem' : '1rem',
             flex: '100%',
-            //height: '100%',
             height: isMobile ? 'auto' : '100%',
         },
         okHealthLogo: {
-            //gridColumn: '2/3',
             gridRow: '1/2',
-            //justifySelf: 'end',
             gridColumn: isMobile ? '1 / 2' : '2 / 3',
-            //gridRow: isMobile ? '1 / 2' : '1 / 2',
             justifySelf: isMobile ? 'center' : 'end',
             fontSize: '24px',
             fontWeight: '800',
             color: '#5b7fb8',
             width: '200px',
             height: '100px',
-            //marginTop: '-20px'
             marginTop: isMobile ? '-2rem' : '-2rem',
             marginRight: isMobile ? '-18rem' : '1.5rem',
             zIndex: 3,
-            //position: isMobile ? 'absolute' : 'relative',
             transition: 'margin-top 0.3s ease-in-out',
         },
         calendar: {
@@ -136,6 +118,28 @@ function DashboardPatientPage() {
             justifyContent: 'stretch',
         },
     };
+
+    // Floating AI button style
+    const aiButtonStyle = {
+        position: 'fixed',
+        right: isMobile ? '20px' : '24px',
+        bottom: isMobile ? '20px' : '24px',
+        backgroundColor: '#3A5FCF',
+        color: 'white',
+        border: 'none',
+        borderRadius: '9999px',
+        padding: '12px 16px',
+        fontFamily: '"Montserrat", sans-serif',
+        fontWeight: 700,
+        boxShadow: '0 10px 20px rgba(0,0,0,0.15)',
+        cursor: 'pointer',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px',
+        zIndex: 9999,
+        transform: 'translateZ(0)', // ensure proper stacking on some browsers
+    };
+
     // Handle date selection and switch to Appointments view
     const handleDateSelect = (date) => {
         setSelectedDate(date);
@@ -191,8 +195,20 @@ function DashboardPatientPage() {
                     {renderMainContent()}
                 </div>
             </div>
+
+            {/* Floating AI button */}
+            <button
+                aria-label="Open AI Symptom Checker"
+                style={aiButtonStyle}
+                onClick={() => navigate('/symptom-checker')}
+                onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.05)'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
+                title="AI Symptom Checker"
+            >
+                🤖 AI
+            </button>
         </div>
     );
 };
 
-export default DashboardPatientPage
+export default DashboardPatientPage;
