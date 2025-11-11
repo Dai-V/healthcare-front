@@ -198,10 +198,22 @@ const LoginForm = () => {
                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
               <div style={forgotPasswordStyle}>
-                <a href="#" style={forgotPasswordLinkStyle}>
-                  Forgot Password?
-                </a>
-              </div>
+  <button
+    type="button"
+    style={{
+      ...forgotPasswordLinkStyle,
+      background: 'none',
+      border: 'none',
+      padding: 0,
+      textDecoration: 'underline',
+      fontSize: '14px',
+    }}
+    onClick={() => navigate('/resetpassword')}
+  >
+    Forgot Password?
+  </button>
+</div>
+
             </div>
             <div style={submitButtonContainerStyle}>
               <button
