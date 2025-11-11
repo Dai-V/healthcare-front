@@ -138,6 +138,25 @@ const styles = {
         transition: 'all 0.3s',
         boxShadow: '0 2px 4px -1px rgba(0, 0, 0, 0.1)',
     },
+    statusBadge: {
+        padding: '0.25rem 0.75rem',
+        borderRadius: '9999px',
+        fontSize: '0.75rem',
+        fontWeight: 600,
+        whiteSpace: 'nowrap',
+    },
+    statusPending: {
+        backgroundColor: '#fef3c7',
+        color: '#92400e',
+    },
+    statusApproved: {
+        backgroundColor: '#d1fae5',
+        color: '#065f46',
+    },
+    statusCanceled: {
+        backgroundColor: '#f3f4f6',
+        color: '#4b5563',
+    },
 };
 
 const PatientRequest = () => {
@@ -197,16 +216,22 @@ const PatientRequest = () => {
                     date: aptDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
                     doctor: `Dr. ${doctorName}`,
                     reason: apt.reason,
-                    rawDate: aptDate
+                    rawDate: aptDate,
+                    status: apt.status,
+                    patientId: apt.patientId,
+                    doctorId: apt.doctorId,
+                    preferredDate: apt.preferredDate
                 };
             });
 
             // Separate into current and past
+            // Current: Only PENDING requests from present to future
             const current = mappedAppointments
-                .filter(apt => apt.rawDate >= today)
+                .filter(apt => apt.rawDate >= today && apt.status === 'PENDING')
                 .sort((a, b) => b.id - a.id); // Sort by ID descending (newest first)
+            // Past: Everything else (past dates or non-PENDING status)
             const past = mappedAppointments
-                .filter(apt => apt.rawDate < today)
+                .filter(apt => apt.rawDate < today || apt.status !== 'PENDING')
                 .sort((a, b) => b.id - a.id); // Sort by ID descending (newest first)
 
             setCurrentRequests(current);
@@ -246,8 +271,40 @@ const PatientRequest = () => {
         fetchData();
     };
 
-    const handleDeleteRequest = (index) => {
-        console.log('Delete request at index:', index);
+    const handleDeleteRequest = async (appointmentId) => {
+        try {
+            // Find the appointment to get its details
+            const appointment = currentRequests.find(apt => apt.id === appointmentId);
+            if (!appointment) return;
+
+            // Send PUT request to update the status to 'cancelled'
+            const response = await fetch(
+                `${import.meta.env.VITE_BACKEND}api/appointment-requests/${appointmentId}`,
+                {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        patientId: appointment.patientId,
+                        doctorId: appointment.doctorId,
+                        preferredDate: appointment.preferredDate,
+                        reason: appointment.reason,
+                        status: 'CANCELED'
+                    })
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error('Failed to cancel appointment');
+            }
+
+            // Refetch data to update the UI
+            fetchData();
+        } catch (err) {
+            console.error('Error cancelling appointment:', err);
+            alert('Failed to cancel appointment. Please try again.');
+        }
     };
 
     const handleButtonHover = (e) => {
@@ -324,10 +381,20 @@ const PatientRequest = () => {
                                             {apt.doctor} - {apt.reason}
                                         </span>
                                     </div>
+
+                                    <div style={{
+                                        ...styles.statusBadge,
+                                        ...(apt.status === 'PENDING' ? styles.statusPending :
+                                            apt.status === 'APPROVED' ? styles.statusApproved :
+                                                apt.status === 'CANCELED' ? styles.statusCanceled :
+                                                    styles.statusRejected)
+                                    }}>
+                                        {apt.status}
+                                    </div>
                                 </div>
                                 <button
                                     style={styles.deleteButton}
-                                    onClick={() => handleDeleteRequest(index)}
+                                    onClick={() => handleDeleteRequest(apt.id)}
                                     onMouseEnter={handleButtonHover}
                                     onMouseLeave={handleButtonLeave}
                                 >
@@ -364,6 +431,20 @@ const PatientRequest = () => {
                                         <span style={styles.namesPast}>
                                             {apt.doctor} - {apt.reason}
                                         </span>
+                                    </div>
+
+                                    <div style={{
+                                        ...styles.statusBadge,
+                                        ...(apt.status === 'PENDING' ? styles.statusPending :
+                                            apt.status === 'APPROVED' ? styles.statusApproved :
+                                                apt.status === 'CANCELED' ? styles.statusCanceled :
+                                                    styles.statusRejected)
+                                    }}>
+                                        {apt.status == 'CANCELED' ? (
+                                            'REJECTED/CANCELED'
+                                        ) : (
+                                            `${apt.status}`
+                                        )}
                                     </div>
                                 </div>
                             </div>

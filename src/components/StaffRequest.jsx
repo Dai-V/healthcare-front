@@ -168,7 +168,8 @@ const StaffRequest = () => {
             const mappedAppointments = appointments
                 .filter(apt => {
                     const aptDate = new Date(apt.preferredDate);
-                    return aptDate >= today; // Only show current/future requests
+                    // Only show current/future requests that are PENDING
+                    return aptDate >= today && apt.status === 'PENDING';
                 })
                 .map(apt => {
                     const patient = userMap[apt.patientId];
@@ -181,7 +182,11 @@ const StaffRequest = () => {
                         patientName: patient ? `${patient.firstName} ${patient.lastName}` : 'Unknown Patient',
                         doctorName: doctor ? `Dr. ${doctor.lastName}` : 'Unknown Doctor',
                         reason: apt.reason,
-                        rawDate: aptDate
+                        rawDate: aptDate,
+                        patientId: apt.patientId,
+                        doctorId: apt.doctorId,
+                        preferredDate: apt.preferredDate,
+                        status: apt.status
                     };
                 })
                 .sort((a, b) => b.id - a.id); // Sort by ID descending (newest first)
@@ -206,14 +211,76 @@ const StaffRequest = () => {
         e.currentTarget.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)';
     };
 
-    const handleApprove = (requestId) => {
-        console.log('Approve request:', requestId);
-        // TODO: Implement approve logic
+    const handleApprove = async (requestId) => {
+        try {
+            // Find the request to get its details
+            const request = requests.find(req => req.id === requestId);
+            if (!request) return;
+
+            // Send PUT request to update the status to 'APPROVED'
+            const response = await fetch(
+                `${import.meta.env.VITE_BACKEND}api/appointment-requests/${requestId}`,
+                {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        patientId: request.patientId,
+                        doctorId: request.doctorId,
+                        preferredDate: request.preferredDate,
+                        reason: request.reason,
+                        status: 'APPROVED'
+                    })
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error('Failed to approve appointment');
+            }
+
+            // Refetch data to update the UI
+            fetchData();
+        } catch (err) {
+            console.error('Error approving appointment:', err);
+            alert('Failed to approve appointment. Please try again.');
+        }
     };
 
-    const handleDeny = (requestId) => {
-        console.log('Deny request:', requestId);
-        // TODO: Implement deny logic
+    const handleDeny = async (requestId) => {
+        try {
+            // Find the request to get its details
+            const request = requests.find(req => req.id === requestId);
+            if (!request) return;
+
+            // Send PUT request to update the status to 'REJECTED'
+            const response = await fetch(
+                `${import.meta.env.VITE_BACKEND}api/appointment-requests/${requestId}`,
+                {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        patientId: request.patientId,
+                        doctorId: request.doctorId,
+                        preferredDate: request.preferredDate,
+                        reason: request.reason,
+                        status: 'CANCELED'
+                    })
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error('Failed to reject appointment');
+            }
+
+            // Refetch data to update the UI
+            fetchData();
+        } catch (err) {
+            console.error('Error rejecting appointment:', err);
+            alert('Failed to reject appointment. Please try again.');
+        }
     };
 
     const handleButtonHover = (e) => {
