@@ -49,6 +49,7 @@ const Calendar = ({ onDateSelect }) => {  // Add this prop
     color: 'white',
     padding: '6px 15px',
     borderRadius: '20px',
+    fontFamily: "Montserrat, sans-serif",
     fontSize: '14px',
     fontWeight: '500'
   };
@@ -63,6 +64,7 @@ const Calendar = ({ onDateSelect }) => {  // Add this prop
   const dayLabelStyle = {
     textAlign: 'center',
     color: '#3A5FCF',
+    fontFamily: "Montserrat, sans-serif",
     fontSize: '14px',
     fontWeight: '600',
     padding: '8px 0'

@@ -1,5 +1,4 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import secureLocalStorage from "react-secure-storage";
 
 
@@ -24,6 +23,7 @@ const styles = {
         background: 'white',
         border: 'none',
         borderRadius: '16px',
+        fontFamily: "Montserrat, sans-serif",
         fontSize: '15px',
         fontWeight: '500',
         color: '#5b7fb8',
@@ -97,6 +97,11 @@ const NavMenu = ({ role, activeView, onViewChange }) => {
         navigate('/login')
     };
 
+    const handleHover = (e, entering) => {
+        e.currentTarget.style.transform = entering ? 'scale(1.03)' : 'scale(1)';
+        e.currentTarget.style.background = entering ? '#e9f2ff' : 'white';
+    };
+
     if (role == 'doctor')
         return (
             <div style={styles.container}>
@@ -107,6 +112,12 @@ const NavMenu = ({ role, activeView, onViewChange }) => {
                             ...(activeView === 'Appointments' ? styles.activeItem : {}),
                         }}
                         onClick={() => handleMenuClick('Appointments')}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.transform = 'scale(1.02)';
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.transform = 'scale(1)';
+                        }}
                     >
                         Appointments
                     </button>
@@ -118,6 +129,12 @@ const NavMenu = ({ role, activeView, onViewChange }) => {
                         ...(activeView === 'Profile' ? styles.activeItem : {}),
                     }}
                     onClick={() => handleMenuClick('Profile')}
+                    onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'scale(1.02)';
+                    }}
+                    onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'scale(1)';
+                    }}
                 >
                     Profile
                 </button>
@@ -148,6 +165,12 @@ const NavMenu = ({ role, activeView, onViewChange }) => {
                             ...(activeView === 'Appointments' ? styles.activeItem : {}),
                         }}
                         onClick={() => handleMenuClick('Appointments')}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.transform = 'scale(1.02)';
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.transform = 'scale(1)';
+                        }}
                     >
                         Appointments
                     </button>
@@ -159,6 +182,12 @@ const NavMenu = ({ role, activeView, onViewChange }) => {
                             ...(activeView === 'Requests' ? styles.activeItem : {}),
                         }}
                         onClick={() => handleMenuClick('Requests')}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.transform = 'scale(1.02)';
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.transform = 'scale(1)';
+                        }}
                     >
                         Requests
                     </button>
@@ -171,6 +200,12 @@ const NavMenu = ({ role, activeView, onViewChange }) => {
                         ...(activeView === 'Profile' ? styles.activeItem : {}),
                     }}
                     onClick={() => handleMenuClick('Profile')}
+                    onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'scale(1.02)';
+                    }}
+                    onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'scale(1)';
+                    }}
                 >
                     Profile
                 </button>

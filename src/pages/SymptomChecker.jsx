@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import dashboardAnim from '../assets/dashboard_anim.gif';
+
 
 const SymptomChecker = () => {
   const navigate = useNavigate();
@@ -18,10 +20,10 @@ const SymptomChecker = () => {
     width: '100%', padding: '14px 16px', borderRadius: '14px', border: '1px solid #e5e7eb',
     marginBottom: '10px', fontFamily: '"Montserrat", sans-serif'
   };
-  const label = { fontSize: 14, color: '#374151', marginBottom: 6, display: 'block' };
+  const label = { fontSize: '1rem', fontWeight: '500', color: '#3A5FCF', marginBottom: 6, display: 'block' };
   const btn = {
     backgroundColor: '#82ABF8', border: 'none', borderRadius: '16px', padding: '12px 18px',
-    cursor: 'pointer', boxShadow: '0 4px 6px rgba(0,0,0,0.1)', transition: 'all .2s'
+    cursor: 'pointer', boxShadow: '0 4px 6px rgba(0,0,0,0.1)', transition: 'all .2s', color: '#F6FAFF'
   };
   const card = { background: 'white', padding: 20, borderRadius: 20, boxShadow: '0 10px 25px rgba(0,0,0,.1)', maxWidth: 760, margin: '24px auto' };
 
@@ -50,9 +52,9 @@ const SymptomChecker = () => {
   }
 
   return (
-    <div style={{ minHeight:'100vh', background:'rgba(229,231,235,0.95)', padding:'20px', fontFamily:'"Montserrat", sans-serif' }}>
+    <div style={{ minHeight:'100vh', backgroundImage: 'linear-gradient(to left, #F8EDE5 30.4%, #82ABF8 88.48%)', padding:'20px', fontFamily:'"Montserrat", sans-serif' }}>
       <div style={card}>
-        <h2 style={{ color:'#3A5FCF', marginTop:0 }}>AI Symptom Checker</h2>
+        <h2 style={{ color:'#3A5FCF', fontFamily: '"Montserrat", sans-serif', fontWeight: '700', fontSize: '2rem', marginTop:0 }}>AI Symptom Checker</h2>
         <form onSubmit={submit}>
           <label style={label}>Age</label>
           <input style={input} type="number" value={age} onChange={e=>setAge(e.target.value)} min="0" />
@@ -87,7 +89,7 @@ const SymptomChecker = () => {
           {err && <div style={{ color:'#b91c1c', marginBottom:10 }}>{err}</div>}
 
           <div style={{ display:'flex', gap:10 }}>
-            <button type="button" style={{...btn, background:'#e5e7eb' }} onClick={()=>navigate('/dashboard')}>
+            <button type="button" style={{...btn, background:'#F6FAFF', color: '#3A5FCF' }} onClick={()=>navigate('/dashboard')}>
               Back to Dashboard
             </button>
             <button type="submit" style={btn} disabled={loading}>
@@ -116,6 +118,20 @@ const SymptomChecker = () => {
           </div>
         )}
       </div>
+      <img
+        src={dashboardAnim}
+        alt="Dashboard animation"
+        style={{
+          position: 'fixed',
+          bottom: '1rem',
+          right: '2rem',
+          width: '5rem',
+          height: 'auto',
+          opacity: 0.9,
+          pointerEvents: 'none',
+          zIndex: 90,
+        }}
+      />
     </div>
   );
 };

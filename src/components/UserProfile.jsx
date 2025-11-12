@@ -1,15 +1,49 @@
-import React, { useState, useEffect } from 'react';
-import { Edit, Check, X } from 'lucide-react';
+import { Check, Edit, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import secureLocalStorage from 'react-secure-storage';
+import pfp from '../assets/pfp.png';
 
-const styles = {
+function formatDateForInput(value) {
+  if (!value) return '';
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) return value;
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(
+    d.getDate()
+  ).padStart(2, '0')}`;
+}
+
+const UserProfile = () => {
+  const [userInfo, setUserInfo] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    dob: '',
+    role: ''
+  });
+  const [original, setOriginal] = useState(null);
+  const [editInfo, setEditInfo] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [appointments, setAppointments] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const styles = {
   container: {
     width: '100%',
     height: '100%',
     overflow: 'auto',
     backgroundColor: '#F6FAFF',
     padding: '1rem',
-    borderRadius: '24px'
+    borderRadius: '24px',
+    flexDirection: isMobile ? 'column' : 'row',
   },
   headerSection: {
     display: 'flex',
@@ -22,6 +56,7 @@ const styles = {
   },
   username: {
     fontSize: '2.5rem',
+    fontFamily: "Montserrat, sans-serif",
     fontWeight: '700',
     color: '#4169E1',
     margin: 0,
@@ -30,6 +65,7 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     gap: '0.5rem',
+    fontFamily: "Montserrat, sans-serif",
     fontSize: '1.25rem',
     fontWeight: '600',
     color: '#4169E1',
@@ -54,13 +90,14 @@ const styles = {
     gap: '1.5rem',
   },
   infoItem: { display: 'flex', flexDirection: 'column', gap: '0.5rem' },
-  infoLabel: { fontSize: '1rem', fontWeight: '600', color: '#4169E1' },
+  infoLabel: { fontSize: '1rem', fontFamily: "Montserrat, sans-serif", fontWeight: '600', color: '#4169E1' },
   infoValue: { fontSize: '0.95rem', color: '#666' },
   input: {
     padding: '0.6rem 0.8rem',
     borderRadius: '0.75rem',
     border: '1px solid #d7d7ee',
     background: 'white',
+    fontFamily: "Montserrat, sans-serif",
     fontSize: '0.95rem',
     color: '#333',
     outline: 'none',
@@ -98,6 +135,7 @@ const styles = {
     cursor: 'pointer'
   },
   historyHeader: {
+    fontFamily: "Montserrat, sans-serif",
     fontSize: '1.25rem',
     fontWeight: '600',
     color: '#4169E1',
@@ -119,34 +157,9 @@ const styles = {
   },
   appointmentRowPurple: { backgroundColor: '#E8E8F5' },
   appointmentRowWhite: { backgroundColor: 'white' },
-  appointmentDate: { fontSize: '1rem', fontWeight: '500', color: '#4169E1' },
-  appointmentDoctor: { fontSize: '1rem', fontWeight: '500', color: '#4169E1' },
+  appointmentDate: { fontFamily: "Montserrat, sans-serif", fontSize: '1rem', fontWeight: '500', color: '#4169E1' },
+  appointmentDoctor: { fontFamily: "Montserrat, sans-serif", fontSize: '1rem', fontWeight: '500', color: '#4169E1' },
 };
-
-function formatDateForInput(value) {
-  if (!value) return '';
-  const d = new Date(value);
-  if (Number.isNaN(d.getTime())) return value;
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(
-    d.getDate()
-  ).padStart(2, '0')}`;
-}
-
-const UserProfile = () => {
-  const [userInfo, setUserInfo] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
-    dob: '',
-    role: ''
-  });
-  const [original, setOriginal] = useState(null);
-  const [editInfo, setEditInfo] = useState(null);
-  const [isEditing, setIsEditing] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
-  const [appointments, setAppointments] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchUserInfo() {
@@ -279,6 +292,30 @@ const UserProfile = () => {
       ) : (
         <>
           <div style={styles.headerSection}>
+            <div
+              style={{
+                width: '6rem',
+                height: '5.8rem',
+                borderRadius: '50%',
+                background: 'linear-gradient(135deg, #82ABF8, #4169E1)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+                boxShadow: '0 4px 10px rgba(65,105,225,0.3)',
+            }}
+            >
+            <img
+              src={pfp}
+              alt="Profile"
+              style={{
+                width: '78px',
+                height: '78px',
+                borderRadius: '45%',
+                objectFit: 'cover',
+              }}
+            />
+        </div>
             <h1 style={styles.username}>Your Profile</h1>
           </div>
 
