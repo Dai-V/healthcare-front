@@ -14,8 +14,8 @@ function App() {
   return (
     <>
       <Routes>
-        {/*<Route path="*" element={<Dashboard />} />  */}
-     
+        <Route path="*" element={<Dashboard />} />
+
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/dashboard/patient" element={<DashboardPatientPage />} />
         <Route path="/dashboard/doctor" element={<DashboardDoctorPage />} />
@@ -23,8 +23,8 @@ function App() {
 
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignUpPage />} />
-       <Route path="/resetpassword" element={<ResetPassword />} />
-       <Route path="/symptom-checker" element={<SymptomChecker />} />
+        <Route path="/resetpassword" element={<ResetPassword />} />
+        <Route path="/symptom-checker" element={<SymptomChecker />} />
       </Routes>
     </>
   )

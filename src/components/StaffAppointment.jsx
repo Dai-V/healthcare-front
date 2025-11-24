@@ -1,6 +1,7 @@
 import { Clock, User } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import StaffAppointmentForm from './StaffAppointmentForm';
+import StaffAppointmentEditForm from './StaffAppointmentEditForm';
 
 
 function StaffAppointment({ selectedDate }) {
@@ -10,7 +11,9 @@ function StaffAppointment({ selectedDate }) {
     const [hoveredKey, setHoveredKey] = useState(null);
     const [loading, setLoading] = useState(true);
     const [showAppointmentForm, setShowAppointmentForm] = useState(false);
+    const [showEditForm, setShowEditForm] = useState(false);
     const [formData, setFormData] = useState(null);
+    const [selectedAppointment, setSelectedAppointment] = useState(null);
 
     const dateToUse = selectedDate || new Date();
 
@@ -84,7 +87,8 @@ function StaffAppointment({ selectedDate }) {
         appointmentRow: {
             display: 'flex',
             gap: '1rem',
-            marginBottom: '1rem',
+            marginBottom: '0.5rem',
+            marginTop: '0.5rem',
             alignItems: isMobile ? 'stretch' : 'center',
             flexDirection: isMobile ? 'row' : 'row',
             flexWrap: isMobile ? 'wrap' : 'nowrap',
@@ -132,6 +136,13 @@ function StaffAppointment({ selectedDate }) {
             transition: 'all 0.2s ease',
             width: '100%',
             minHeight: '60px',
+        },
+        patientNameWrapper: {
+            flex: 1,
+            textAlign: 'center',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
         },
         patientTagHover: {
             backgroundColor: '#5c6bc0',
@@ -189,6 +200,15 @@ function StaffAppointment({ selectedDate }) {
             padding: '0.75rem 1rem',
             marginBottom: '0.5rem',
             boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+            cursor: 'pointer',
+            transition: 'all 0.2s ease',
+        },
+        mobileSlotRowEmpty: {
+            backgroundColor: '#f0f0f5',
+        },
+        mobileSlotRowHover: {
+            transform: 'translateY(-2px)',
+            boxShadow: '0 4px 12px rgba(92, 107, 192, 0.2)',
         },
         timeLabel: {
             display: 'flex',
@@ -241,8 +261,9 @@ function StaffAppointment({ selectedDate }) {
             const aptHour = appointmentDate.getHours();
             const isCorrectHour = aptHour === slotHour;
             const isCorrectDoctor = apt.doctorUserId === doctorId;
+            const isNotCanceled = apt.status !== 'CANCELED';
 
-            return isCorrectDate && isCorrectHour && isCorrectDoctor;
+            return isCorrectDate && isCorrectHour && isCorrectDoctor && isNotCanceled;
         });
     };
 
@@ -267,19 +288,9 @@ function StaffAppointment({ selectedDate }) {
         return `Patient #${patientUserId}`;
     };
 
-    const handleAppointmentClick = (appointment, doctorName) => {
-        const startTime = formatTime(appointment.scheduledStart);
-        const endTime = formatTime(appointment.scheduledEnd);
-        const patientName = getPatientName(appointment.patientUserId);
-
-        alert(
-            `Appointment Details:\n` +
-            `Doctor: ${doctorName}\n` +
-            `Patient: ${patientName}\n` +
-            `Time: ${startTime} - ${endTime}\n` +
-            `Reason: ${appointment.reason}\n` +
-            `Status: ${appointment.status}`
-        );
+    const handleAppointmentClick = (appointment) => {
+        setSelectedAppointment(appointment);
+        setShowEditForm(true);
     };
 
     const handleEmptySlotClick = (doctor, timeSlot) => {
@@ -296,6 +307,11 @@ function StaffAppointment({ selectedDate }) {
     const handleFormClose = () => {
         setShowAppointmentForm(false);
         setFormData(null);
+    };
+
+    const handleEditFormClose = () => {
+        setShowEditForm(false);
+        setSelectedAppointment(null);
     };
 
     const handleFormSuccess = () => {
@@ -417,13 +433,31 @@ function StaffAppointment({ selectedDate }) {
                             {timeSlots.map((time) => {
                                 const appointment = getAppointmentForDoctorAndSlot(doctor.id, time);
                                 const patientName = appointment ? getPatientName(appointment.patientUserId) : null;
+                                const isEmpty = !appointment;
+                                const slotKey = `mobile-${doctor.id}-${time}`;
                                 return (
-                                    <div key={time} style={styles.mobileSlotRow}>
+                                    <div
+                                        key={time}
+                                        style={{
+                                            ...styles.mobileSlotRow,
+                                            ...(isEmpty ? { backgroundColor: '#f0f0f5' } : {}),
+                                            ...(hoveredKey === slotKey ? { transform: 'translateY(-2px)', boxShadow: '0 4px 12px rgba(92, 107, 192, 0.2)' } : {})
+                                        }}
+                                        onMouseEnter={() => setHoveredKey(slotKey)}
+                                        onMouseLeave={() => setHoveredKey(null)}
+                                        onClick={() => {
+                                            if (appointment) {
+                                                handleAppointmentClick(appointment);
+                                            } else {
+                                                handleEmptySlotClick(doctor, time);
+                                            }
+                                        }}
+                                    >
                                         <div style={styles.timeLabel}>
                                             <Clock size={16} /> <span>{time}</span>
                                         </div>
                                         <div style={styles.patientLabel}>
-                                            {patientName ? patientName : '—'}
+                                            {patientName ? patientName : 'Available'}
                                         </div>
                                     </div>
                                 );
@@ -456,7 +490,6 @@ function StaffAppointment({ selectedDate }) {
                                     const appointment = getAppointmentForDoctorAndSlot(doctor.id, time);
                                     const hoverKey = `${timeIndex}-${doctor.id}`;
                                     const emptyHoverKey = `empty-${timeIndex}-${doctor.id}`;
-                                    const doctorName = `Dr. ${doctor.lastName}`;
 
                                     return (
                                         <div key={doctor.id} style={styles.appointmentCell}>
@@ -468,12 +501,12 @@ function StaffAppointment({ selectedDate }) {
                                                     }}
                                                     onMouseEnter={() => setHoveredKey(hoverKey)}
                                                     onMouseLeave={() => setHoveredKey(null)}
-                                                    onClick={() => handleAppointmentClick(appointment, doctorName)}
+                                                    onClick={() => handleAppointmentClick(appointment)}
                                                 >
                                                     <div style={styles.iconWrapper}>
                                                         <User size={18} />
                                                     </div>
-                                                    <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                                    <span style={styles.patientNameWrapper}>
                                                         {getPatientName(appointment.patientUserId)}
                                                     </span>
                                                 </button>
@@ -497,7 +530,7 @@ function StaffAppointment({ selectedDate }) {
                 )}
             </div>
 
-            {/* Appointment Form Modal */}
+            {/* Create Appointment Form Modal */}
             {showAppointmentForm && formData && (
                 <StaffAppointmentForm
                     onClose={handleFormClose}
@@ -506,6 +539,15 @@ function StaffAppointment({ selectedDate }) {
                     doctorName={formData.doctorName}
                     date={formData.date}
                     timeSlot={formData.timeSlot}
+                />
+            )}
+
+            {/* Edit Appointment Form Modal */}
+            {showEditForm && selectedAppointment && (
+                <StaffAppointmentEditForm
+                    appointment={selectedAppointment}
+                    onClose={handleEditFormClose}
+                    onSuccess={handleFormSuccess}
                 />
             )}
         </>

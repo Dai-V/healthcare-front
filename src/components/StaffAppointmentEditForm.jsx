@@ -142,6 +142,20 @@ const styles = {
         transition: 'all 0.3s',
         boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
     },
+    cancelButton: {
+        width: '100%',
+        backgroundColor: '#DC2626',
+        color: 'white',
+        border: 'none',
+        borderRadius: '1.5rem',
+        padding: '0.875rem',
+        fontSize: '1.125rem',
+        fontWeight: 600,
+        cursor: 'pointer',
+        marginTop: '0.5rem',
+        transition: 'all 0.3s',
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+    },
     selectedItem: {
         backgroundColor: 'white',
         padding: '0.75rem 1rem',
@@ -158,13 +172,6 @@ const styles = {
         padding: '0.25rem',
         fontSize: '0.875rem',
         fontWeight: 600,
-    },
-    infoBox: {
-        backgroundColor: 'white',
-        padding: '0.75rem 1rem',
-        borderRadius: '1.5rem',
-        fontSize: '1rem',
-        color: '#4169E1',
     },
     loading: {
         textAlign: 'center',
@@ -190,46 +197,23 @@ const styles = {
     },
 };
 
-const StaffAppointmentForm = ({ onClose, onSuccess, doctorId, doctorName, date, timeSlot }) => {
-    // Convert timeSlot string to time format
-    const getInitialTime = (timeSlotStr) => {
-        const match = timeSlotStr.match(/(\d+)\.00 (AM|PM)/);
-        if (!match) return '9:00';
-
-        let hour = parseInt(match[1]);
-        const period = match[2];
-
-        if (period === 'PM' && hour !== 12) {
-            hour += 12;
-        } else if (period === 'AM' && hour === 12) {
-            hour = 0;
-        }
-
-        return `${hour}:00`;
-    };
-
-    // Format date as YYYY-MM-DD
-    const formatDate = (dateObj) => {
-        const d = new Date(dateObj);
-        return d.toISOString().split('T')[0];
-    };
-
+const StaffAppointmentEditForm = ({ onClose, onSuccess, appointment }) => {
     const [formData, setFormData] = useState({
-        patientUserId: null,
-        doctorUserId: doctorId,
-        reason: '',
+        patientUserId: appointment.patientUserId || null,
+        doctorUserId: appointment.doctorUserId || null,
+        reason: appointment.reason || '',
         duration: '60',
-        date: formatDate(date),
-        time: getInitialTime(timeSlot),
+        date: '',
+        time: '9:00',
     });
 
     const [patients, setPatients] = useState([]);
     const [doctors, setDoctors] = useState([]);
-    const [searchTerm, setSearchTerm] = useState('');
+    const [patientSearchTerm, setPatientSearchTerm] = useState('');
     const [doctorSearchTerm, setDoctorSearchTerm] = useState('');
     const [selectedPatient, setSelectedPatient] = useState(null);
     const [selectedDoctor, setSelectedDoctor] = useState(null);
-    const [showDropdown, setShowDropdown] = useState(false);
+    const [showPatientDropdown, setShowPatientDropdown] = useState(false);
     const [showDoctorDropdown, setShowDoctorDropdown] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -247,10 +231,35 @@ const StaffAppointmentForm = ({ onClose, onSuccess, doctorId, doctorName, date, 
     useEffect(() => {
         document.body.style.overflow = 'hidden';
         fetchData();
+        initializeFormData();
         return () => {
             document.body.style.overflow = 'unset';
         };
     }, []);
+
+    const initializeFormData = () => {
+        // Parse the existing appointment datetime
+        const startDate = new Date(appointment.scheduledStart);
+        const endDate = new Date(appointment.scheduledEnd);
+
+        // Calculate duration in minutes
+        const durationMinutes = Math.round((endDate - startDate) / (1000 * 60));
+
+        // Format date as YYYY-MM-DD
+        const dateStr = startDate.toISOString().split('T')[0];
+
+        // Format time as HH:MM
+        const hours = startDate.getHours();
+        const minutes = startDate.getMinutes();
+        const timeStr = `${hours}:${minutes.toString().padStart(2, '0')}`;
+
+        setFormData(prev => ({
+            ...prev,
+            duration: durationMinutes.toString(),
+            date: dateStr,
+            time: timeStr,
+        }));
+    };
 
     const fetchData = async () => {
         try {
@@ -265,14 +274,18 @@ const StaffAppointmentForm = ({ onClose, onSuccess, doctorId, doctorName, date, 
 
             const users = await usersResponse.json();
 
+            // Filter users by role
             const patientUsers = users.filter(user => user.role === 'patient');
             const doctorUsers = users.filter(user => user.role === 'doctor');
 
             setPatients(patientUsers);
             setDoctors(doctorUsers);
 
-            // Set initial selected doctor
-            const doctor = doctorUsers.find(d => d.id === doctorId);
+            // Set initially selected patient and doctor
+            const patient = patientUsers.find(p => p.id === appointment.patientUserId);
+            const doctor = doctorUsers.find(d => d.id === appointment.doctorUserId);
+
+            if (patient) setSelectedPatient(patient);
             if (doctor) setSelectedDoctor(doctor);
 
             setLoading(false);
@@ -284,7 +297,7 @@ const StaffAppointmentForm = ({ onClose, onSuccess, doctorId, doctorName, date, 
 
     const filteredPatients = patients.filter(patient => {
         const fullName = `${patient.firstName} ${patient.lastName}`.toLowerCase();
-        const search = searchTerm.toLowerCase();
+        const search = patientSearchTerm.toLowerCase();
         return fullName.includes(search) || patient.email.toLowerCase().includes(search);
     });
 
@@ -297,8 +310,8 @@ const StaffAppointmentForm = ({ onClose, onSuccess, doctorId, doctorName, date, 
     const handlePatientSelect = (patient) => {
         setSelectedPatient(patient);
         setFormData(prev => ({ ...prev, patientUserId: patient.id }));
-        setSearchTerm('');
-        setShowDropdown(false);
+        setPatientSearchTerm('');
+        setShowPatientDropdown(false);
     };
 
     const handleDoctorSelect = (doctor) => {
@@ -311,8 +324,8 @@ const StaffAppointmentForm = ({ onClose, onSuccess, doctorId, doctorName, date, 
     const handleClearPatient = () => {
         setSelectedPatient(null);
         setFormData(prev => ({ ...prev, patientUserId: null }));
-        setSearchTerm('');
-        setShowDropdown(true);
+        setPatientSearchTerm('');
+        setShowPatientDropdown(true);
     };
 
     const handleClearDoctor = () => {
@@ -344,15 +357,18 @@ const StaffAppointmentForm = ({ onClose, onSuccess, doctorId, doctorName, date, 
         try {
             // Create datetime from date and time
             const [hours, minutes] = formData.time.split(':').map(Number);
+            // Parse date string as local date to avoid timezone offset issues
             const [year, month, day] = formData.date.split('-').map(Number);
             const startDateTime = new Date(year, month - 1, day, hours, minutes, 0, 0);
+
+
 
             // Calculate end time based on duration
             const endDateTime = new Date(startDateTime);
             endDateTime.setMinutes(endDateTime.getMinutes() + parseInt(formData.duration));
 
-            const response = await fetch(import.meta.env.VITE_BACKEND + 'api/appointments', {
-                method: 'POST',
+            const response = await fetch(import.meta.env.VITE_BACKEND + `api/appointments/${appointment.id}`, {
+                method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -362,12 +378,12 @@ const StaffAppointmentForm = ({ onClose, onSuccess, doctorId, doctorName, date, 
                     scheduledStart: toLocalISOString(startDateTime),
                     scheduledEnd: toLocalISOString(endDateTime),
                     reason: formData.reason,
-                    status: 'Scheduled'
+                    status: appointment.status
                 })
             });
 
             if (!response.ok) {
-                throw new Error('Failed to create appointment');
+                throw new Error('Failed to update appointment');
             }
 
             if (onSuccess) {
@@ -376,8 +392,39 @@ const StaffAppointmentForm = ({ onClose, onSuccess, doctorId, doctorName, date, 
 
             onClose();
         } catch (err) {
-            alert('Failed to create appointment. Please try again.');
-            console.error('Error creating appointment:', err);
+            alert('Failed to update appointment. Please try again.');
+            console.error('Error updating appointment:', err);
+        }
+    };
+
+    const handleCancelAppointment = async () => {
+        if (!window.confirm('Are you sure you want to cancel this appointment?')) {
+            return;
+        }
+
+        try {
+            const response = await fetch(import.meta.env.VITE_BACKEND + `api/appointments/${appointment.id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    status: 'Canceled'
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to cancel appointment');
+            }
+
+            if (onSuccess) {
+                onSuccess();
+            }
+
+            onClose();
+        } catch (err) {
+            alert('Failed to cancel appointment. Please try again.');
+            console.error('Error cancelling appointment:', err);
         }
     };
 
@@ -397,6 +444,9 @@ const StaffAppointmentForm = ({ onClose, onSuccess, doctorId, doctorName, date, 
         }
     };
 
+    // Get minimum date (today)
+    const today = new Date().toISOString().split('T')[0];
+
     return createPortal(
         <div style={styles.overlay} onClick={handleOverlayClick}>
             <div style={styles.modal}>
@@ -404,7 +454,7 @@ const StaffAppointmentForm = ({ onClose, onSuccess, doctorId, doctorName, date, 
                     <X size={28} strokeWidth={3} />
                 </button>
 
-                <h2 style={styles.title}>Create Appointment</h2>
+                <h2 style={styles.title}>Edit Appointment</h2>
 
                 <div>
                     <div style={styles.formGroup}>
@@ -536,18 +586,18 @@ const StaffAppointmentForm = ({ onClose, onSuccess, doctorId, doctorName, date, 
                                     <Search size={20} style={styles.searchIcon} />
                                     <input
                                         type="text"
-                                        value={searchTerm}
+                                        value={patientSearchTerm}
                                         onChange={(e) => {
-                                            setSearchTerm(e.target.value);
-                                            setShowDropdown(true);
+                                            setPatientSearchTerm(e.target.value);
+                                            setShowPatientDropdown(true);
                                         }}
-                                        onFocus={() => setShowDropdown(true)}
+                                        onFocus={() => setShowPatientDropdown(true)}
                                         style={styles.searchInput}
                                         placeholder="Search by name or email..."
                                         required
                                     />
                                 </div>
-                                {showDropdown && (
+                                {showPatientDropdown && (
                                     <div style={styles.dropdownList}>
                                         {loading && <div style={styles.loading}>Loading patients...</div>}
                                         {!loading && filteredPatients.length === 0 && (
@@ -597,7 +647,17 @@ const StaffAppointmentForm = ({ onClose, onSuccess, doctorId, doctorName, date, 
                         onMouseEnter={handleButtonHover}
                         onMouseLeave={handleButtonLeave}
                     >
-                        Create Appointment
+                        Update Appointment
+                    </button>
+
+                    <button
+                        type="button"
+                        style={styles.cancelButton}
+                        onClick={handleCancelAppointment}
+                        onMouseEnter={handleButtonHover}
+                        onMouseLeave={handleButtonLeave}
+                    >
+                        Cancel Appointment
                     </button>
                 </div>
             </div>
@@ -606,4 +666,4 @@ const StaffAppointmentForm = ({ onClose, onSuccess, doctorId, doctorName, date, 
     );
 };
 
-export default StaffAppointmentForm;
+export default StaffAppointmentEditForm;
