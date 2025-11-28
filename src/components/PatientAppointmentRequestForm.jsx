@@ -169,7 +169,7 @@ const styles = {
     error: {
         textAlign: 'center',
         padding: '1rem',
-        color: '#DC2626',
+        color: '#ff5252',
         fontSize: '0.875rem',
     },
 };

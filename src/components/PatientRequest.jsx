@@ -108,7 +108,7 @@ const styles = {
     },
     error: {
         textAlign: 'center',
-        color: '#ef4444',
+        color: '#ff5252',
         padding: '2rem',
     },
     requestButton: {
@@ -127,7 +127,7 @@ const styles = {
         right: '1rem',
     },
     deleteButton: {
-        backgroundColor: '#ef4444',
+        backgroundColor: '#ff5252',
         color: 'white',
         border: 'none',
         borderRadius: '0.5rem',
