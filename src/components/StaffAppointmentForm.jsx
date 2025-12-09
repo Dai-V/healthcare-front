@@ -265,7 +265,7 @@ const StaffAppointmentForm = ({ onClose, onSuccess, doctorId, doctorName, date, 
 
             const users = await usersResponse.json();
 
-            const patientUsers = users.filter(user => user.role === 'patient');
+            const patientUsers = users.filter(user => user.role.toLowerCase() === 'patient');
             const doctorUsers = users.filter(user => user.role === 'doctor');
 
             setPatients(patientUsers);

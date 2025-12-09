@@ -275,7 +275,7 @@ const StaffAppointmentEditForm = ({ onClose, onSuccess, appointment }) => {
             const users = await usersResponse.json();
 
             // Filter users by role
-            const patientUsers = users.filter(user => user.role === 'patient');
+            const patientUsers = users.filter(user => user.role.toLowerCase() === 'patient');
             const doctorUsers = users.filter(user => user.role === 'doctor');
 
             setPatients(patientUsers);
